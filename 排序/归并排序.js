@@ -104,7 +104,6 @@ function mergeSelf(left, right, temp, s) {
         count2++;
     }
 
-
 }
 
 

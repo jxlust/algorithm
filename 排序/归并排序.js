@@ -21,6 +21,7 @@ function mergeSort(arr) {
     return merge(mergeSort(left), mergeSort(right));
 }
 
+let count = 0;
 //利用栈
 function merge(left, right) {
     let arr = [];
@@ -31,12 +32,15 @@ function merge(left, right) {
         } else {
             arr.push(left.shift());
         }
+        count++
     }
     while (left.length) {
         arr.push(left.shift());
+        count++
     }
     while (right.length) {
         arr.push(right.shift());
+        count++
     }
     // if (left.length) {
     //     arr = arr.concat(left);
@@ -47,7 +51,6 @@ function merge(left, right) {
     return arr;
 
 }
-
 
 /**
  * 非递归的改写，思路是置地向上的，也就是迭代法
@@ -62,23 +65,24 @@ function mergeSort2(arr) {
     for (let i = 1; i < length; i = 2 * i) {
         // 切割i 先一个一个两两合并成一个，在两个两个...
         for (let s = 0; s < length; s = s + 2 * i) {
-            // (0,1) (2,3) (4,5) (6)
-            // [0, 2]
-            // [2, 4]
-            // i =2 ,0,  4 
+            // 这里s为分割的起始索引
             let left = arr.slice(s, s + i);
-            let right = arr.slice(s + i, s + 2 * i);
 
+            //这里得优化最末尾的位置获取
+            let end = s + 2 * i;
+            let right = arr.slice(s + i, end);
             // let mA = merge(left, right);
             // console.log(1, mA);
             // arr.splice(s, mA.length, ...mA);
             mergeSelf(left, right, temp, s);
         }
+        // console.log(i, temp);
         arr = temp;
     }
 
     return arr;
 }
+let count2 = 0;
 
 function mergeSelf(left, right, temp, s) {
     let first = s;
@@ -88,16 +92,32 @@ function mergeSelf(left, right, temp, s) {
         } else {
             temp[first++] = left.shift();
         }
+        count2++;
     }
 
     while (left.length) {
         temp[first++] = left.shift();
+        count2++;
     }
     while (right.length) {
         temp[first++] = right.shift();
+        count2++;
     }
+
+
 }
 
 
+let array2 = [57, 43, 99, 56, 99, 5, 33, 56, 32];
+for (let v = 0; v < 100000; v++) {
+    array2.push(v);
+}
+console.log('排序后：', mergeSort2(array2), count2)
+
 let array = [57, 43, 99, 56, 99, 5, 33, 56, 32];
-console.log('排序后：', mergeSort2(array))
+for (let v = 0; v < 100000; v++) {
+    array.push(v);
+}
+console.log('排序后：', mergeSort(array), count)
+console.log('差距：', count - count2);
+

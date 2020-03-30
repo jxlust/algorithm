@@ -49,7 +49,6 @@ function merge(left, right) {
 }
 
 
-//非递归
 /**
  * 非递归的改写，思路是置地向上的，也就是迭代法
  * @param {*} arr 
@@ -59,7 +58,6 @@ function mergeSort2(arr) {
     if (length < 2) {
         return arr;
     }
-    // let newArr = [];
     let temp = new Array(length);
     for (let i = 1; i < length; i = 2 * i) {
         // 切割i 先一个一个两两合并成一个，在两个两个...
@@ -67,24 +65,23 @@ function mergeSort2(arr) {
             // (0,1) (2,3) (4,5) (6)
             // [0, 2]
             // [2, 4]
-
+            // i =2 ,0,  4 
             let left = arr.slice(s, s + i);
             let right = arr.slice(s + i, s + 2 * i);
-            // console.log(999, i, s);
+
             // let mA = merge(left, right);
-            mergeSelf(left, right, temp, s, i);
             // console.log(1, mA);
             // arr.splice(s, mA.length, ...mA);
+            mergeSelf(left, right, temp, s);
         }
-
         arr = temp;
     }
+
     return arr;
 }
 
-function mergeSelf(left, right, temp, s, i) {
-    console.log('i s:',i,s);
-    let first = s * i;
+function mergeSelf(left, right, temp, s) {
+    let first = s;
     while (left.length > 0 && right.length > 0) {
         if (left[0] > right[0]) {
             temp[first++] = right.shift();
@@ -99,12 +96,8 @@ function mergeSelf(left, right, temp, s, i) {
     while (right.length) {
         temp[first++] = right.shift();
     }
-    console.log(i, temp);
 }
 
-function mergeSort3(arr) {
-
-}
 
 let array = [57, 43, 99, 56, 99, 5, 33, 56, 32];
 console.log('排序后：', mergeSort2(array))

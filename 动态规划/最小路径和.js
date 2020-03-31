@@ -46,7 +46,6 @@ var minPathSum2 = function (grid) {
     // let m = grid.length;
     let n = grid[0].length;
     let dp = new Array(n);
-
     for (let i = 0; i < grid.length; i++) {
         for (let j = 0; j < n; j++) {
             if (i == 0 && j == 0) {
@@ -61,13 +60,17 @@ var minPathSum2 = function (grid) {
         }
     }
     // console.log(dp);
-    return dp[n - 1] ? dp[n - 1] : 0;
+    return dp[n - 1];
 };
 
 const arr = [
     [1, 3, 1],
     [1, 5, 1],
     [4, 2, 1],
-    // [2, 4, 1]
+    [2, 4, 1]
 ]
-console.log('最小路径和：', minPathSum2(arr));
+try {
+    console.log('最小路径和：', minPathSum2(arr));
+} catch (error) {
+    console.log('数组不符合要求m*n', error);
+}

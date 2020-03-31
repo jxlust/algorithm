@@ -42,17 +42,20 @@ function maxSubArray2(array) {
 console.log('优化后：', maxSubArray2(array));
 
 //简化代码
-function maxSubArray3(array) {
-    if (!array || array.length === 0) {
+function maxSubArray3(nums) {
+    if (!nums || nums.length === 0) {
         return 0;
     }
-    let n = array.length;
-    let dp = array[0];
-    let result = dp;
-    for (let i = 1; i < n; i++) {
-        dp = Math.max(dp, 0) + array[i];
-        result = Math.max(result, dp);
+    let result = nums[0];
+    let max = result;
+    for (let i = 1; i < nums.length; i++) {
+        if (result > 0) {
+            result += nums[i];
+        } else {
+            result = nums[i];
+        }
+        max = Math.max(result, max);
     }
-    return result;
+    return max;
 }
 console.log('3:', maxSubArray3(array));

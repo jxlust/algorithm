@@ -46,7 +46,7 @@ function countSort2(arr) {
     let [max, min] = getMaxAndValue(arr);
 
     //这里优化了空间复杂度
-    let offset = min;
+    // let offset = min;
     let len = max - min + 1;
     let tempArray = new Array(len);
 

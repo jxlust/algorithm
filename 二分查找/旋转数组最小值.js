@@ -31,8 +31,8 @@ const findMin = nums => {
 const arr = [4, 5, 6, 7, 0, 1, 2];
 console.log(findMin(arr));
 
-
 // 如果存在允许有重复元素
+// 我们将该数组可视化，下图中的 X 轴表示元素在数组中的下标，Y 轴表示元素的值。
 const findMin2 = nums => {
     // if (!nums) {
     //     return -1;
@@ -52,8 +52,8 @@ const findMin2 = nums => {
     }
     return nums[left];
 }
+
 //[2, 2, 2, 0, 1, 1]
 // [3,3,1,3] 
 const arr2 = [3, 3, 1, 3];
-
 console.log('允许重复：', findMin2(arr2));

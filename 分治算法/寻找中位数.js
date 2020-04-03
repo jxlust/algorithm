@@ -39,11 +39,6 @@ const findMidNum = function (nums1, nums2) {
     }
 }
 
-// 改进
-const findMidNum2 = function (nums1, nums2) {
-    
-}
-
 function merge(arr1, arr2, isMin) {
     let arr = [];
     while (arr1.length > 0 && arr2.length > 0) {

@@ -22,7 +22,7 @@ function mergeSort(arr) {
 }
 
 let count = 0;
-//利用栈
+//利用队列
 function merge(left, right) {
     let arr = [];
     // console.log(left, right);

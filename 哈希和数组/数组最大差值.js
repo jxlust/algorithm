@@ -27,7 +27,7 @@ const maxProfit2 = arr => {
     let p1 = 0;
     let p2 = 1;
     let maxValue = arr[p2] - arr[p1];
-    while (p1 < p2 && p2 < arr.length) {
+    while (p2 < arr.length) {
         if (arr[p2] < arr[p1]) {
             p1 = p2;
         } else {
@@ -43,7 +43,7 @@ const maxProfit2 = arr => {
 
 
 let arr1 = [2, 1, 5, 10, 16, 8];
-let arr2 = [7, 6, 4, 3, 8];
+let arr2 = [7, 6, 4, 3, 2];
 let arr3 = [10, 10, 6, 5, 1];
 console.log(maxProfit2(arr1));
 console.log(maxProfit2(arr2));

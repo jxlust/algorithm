@@ -29,7 +29,6 @@ const bucketSort = (arr, bucketSize = 5) => {
 
     //每个桶内部排序
     arr.length = 0;
-
     for (let i = 0; i < bucketArr.length; i++) {
         if (bucketArr[i].length) {
             bucketArr[i].sort((a, b) => a - b);

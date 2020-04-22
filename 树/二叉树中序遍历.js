@@ -1,3 +1,8 @@
+//描述：
+//先序遍历：根节点 →左子树 → 右子树，在子树中继续应用左子树 → 根节点 → 右子树；
+//中序遍历：左子树 → 根节点 → 右子树，同理
+//后序遍历：左子树 → 右子树 → 根节点，同理
+
 /**
  * Definition for a binary tree node.
  * function TreeNode(val) {
@@ -6,13 +11,33 @@
  * }
  */
 /**
- * 二叉树中序遍历
+ * 二叉树中序遍历 左子树 -> 根节点 -> 右子树
  * @param {TreeNode} root
  * @return {number[]}
  */
+var helper = function (root, result) {
+    if (root) {
+        if (root.left) {
+            helper(root.left, result);
+        }
+        result.push(root.val);
+        if (root.right) {
+            helper(root.right, result);
+        }
+    }
+}
 var inorderTraversal = function (root) {
-
+    let arr = [];
+    helper(root, arr);
+    return arr;
 };
+
+var inorderTraversal2 = function (root) {
+    if (!root) {
+        return [];
+    }
+    return [].concat(inorderTraversal2(root.left),root.val,inorderTraversal2(root.right))
+}
 
 const TreeNode = function (val) {
     this.val = val;
@@ -25,33 +50,8 @@ const TreeNode = function (val) {
 //      2
 //     /
 //    3
-
 // 输出: [1,3,2]
 
-/**
- * 数组变成完全二叉树
- * @param {number[]} arr 
- * @param {number} index
- * @return TreeNode
- */
-// const ArrayToTree = function (arr, index = 0) {
-//     if (!arr || arr.length === 0) {
-//         return null;
-//     }
-//     let treeNode = null;
-//     if(index < arr.length){
-//         treeNode = new TreeNode();
-//         treeNode.val = arr[index];
-//         treeNode.left = ArrayToTree(arr,2 * index + 1);
-//         treeNode.right = ArrayToTree(arr,2 * index + 2);
-//     }
-//     return treeNode;
-// }
-
-/**
- * 迭代法创建树，这里利用了对象的引用
- * @param {number[]} arr 
- */
 const ArrayToTree = function (arr) {
     if (!arr || arr.length === 0) {
         return null;
@@ -91,4 +91,8 @@ const ArrayToTree = function (arr) {
     return lists[0];
     // console.log('lists:',lists[0]);
 }
-console.log(ArrayToTree([1, null, null, null,2]));
+let tree = ArrayToTree(['A', null, 'B', 'C', 'D']);
+console.log('tree', tree);
+
+// console.log('中序遍历1：', inorderTraversal(tree));
+console.log('中序遍历2：', inorderTraversal2(tree));

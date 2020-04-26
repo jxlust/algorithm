@@ -36,9 +36,31 @@ var inorderTraversal2 = function (root) {
     if (!root) {
         return [];
     }
-    return [].concat(inorderTraversal2(root.left),root.val,inorderTraversal2(root.right))
+    return [].concat(arguments.callee(root.left),root.val,arguments.callee(root.right))
 }
 
+/**
+ * 非递归的中序遍历
+ * @param {TreeNode} root 
+ */
+var inorderTraversal3 = function (root) {
+    let stack  = [];
+    let res = [];
+    // let cur = root;
+    let cur = root;
+    while(cur || stack.length){
+        while(cur){
+            //左子树入栈
+            stack.push(cur);
+            cur = cur.left;
+        }
+        //弹出最后进入的左子树
+        cur = stack.pop();
+        res.push(cur.val);
+        cur = cur.right;
+    }
+    return res;
+}
 const TreeNode = function (val) {
     this.val = val;
     this.left = this.right = null;
@@ -96,3 +118,5 @@ console.log('tree', tree);
 
 // console.log('中序遍历1：', inorderTraversal(tree));
 console.log('中序遍历2：', inorderTraversal2(tree));
+console.log('中序遍历3：', inorderTraversal3(tree));
+

@@ -46,6 +46,18 @@ const DFS2 = function (data,target) {
     }
     return false;
 }
+const DFS3 = function (data,target) {
+    let visited = [];
+    let stack = [];
+    // stack.push(data);
+    let cur = data;
+    while(cur || stack.length){
+        if(cur.val === target){
+            return true;
+        }
+        
+    }
+}
 
 
 const Node = function (val, node) {

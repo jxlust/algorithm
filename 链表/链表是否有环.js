@@ -43,3 +43,25 @@ const hasCycle2 = function (head) {
     }
     return false;
 }
+
+
+
+/** 
+ * 获取链表入环的第一个节点，没有返回null
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var detectCycle = function(head) {
+    
+}
+var detectCycle = function(head) {
+    let set = new Set();
+    while(head){
+        if(set.has(head)){
+            return head;
+        }
+        set.add(head);
+        head = head.next;
+    }
+    return null;
+};

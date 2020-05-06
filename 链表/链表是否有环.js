@@ -1,3 +1,4 @@
+
 /**
  * Definition for singly-linked list.
  * function ListNode(val) {
@@ -52,7 +53,7 @@ const hasCycle2 = function (head) {
  * @return {ListNode}
  */
 var detectCycle = function(head) {
-    
+
 }
 var detectCycle = function(head) {
     let set = new Set();

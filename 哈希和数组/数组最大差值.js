@@ -27,15 +27,24 @@ const maxProfit2 = arr => {
     let p1 = 0;
     let p2 = 1;
     let maxValue = arr[p2] - arr[p1];
-    while (p2 < arr.length) {
-        if (arr[p2] < arr[p1]) {
-            p1 = p2;
-        } else {
-            if (arr[p2] - arr[p1] > maxValue) {
-                maxValue = arr[p2] - arr[p1];
+    // while (p2 < arr.length) {
+    //     if (arr[p2] < arr[p1]) {
+    //         p1 = p2;
+    //     } else {
+    //         if (arr[p2] - arr[p1] > maxValue) {
+    //             maxValue = arr[p2] - arr[p1];
+    //         }
+    //     }
+    //     p2++;
+    // }
+    for (let i = 1; i < arr.length; i++) {
+        if(arr[i] < arr[p1]){
+            p1 = i;
+        }else{
+            if(arr[i] - arr[p1] > maxValue){
+                maxValue = arr[i] - arr[p1];
             }
         }
-        p2++;
     }
     return maxValue;
 }

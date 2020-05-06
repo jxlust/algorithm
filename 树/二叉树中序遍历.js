@@ -2,7 +2,6 @@
 //先序遍历：根节点 →左子树 → 右子树，在子树中继续应用左子树 → 根节点 → 右子树；
 //中序遍历：左子树 → 根节点 → 右子树，同理
 //后序遍历：左子树 → 右子树 → 根节点，同理
-
 /**
  * Definition for a binary tree node.
  * function TreeNode(val) {

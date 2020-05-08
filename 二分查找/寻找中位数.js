@@ -57,8 +57,14 @@ const findMid = (nums1, nums2) => {
     let m = nums2.length;
     let left = (n + m + 1) >>> 1;
     let right = (n + m + 2) >>> 1;
+    if (left === right) {
+        //奇数
+        return getMinK(left, 0, n - 1, 0, m - 1);
+    } else {
+        return (getMinK(left, 0, n - 1, 0, m - 1) + getMinK(right, 0, n - 1, 0, m - 1)) * 0.5;
+    }
     // console.log('xxx',left,right);
-    return (getMinK(left, 0, n - 1, 0, m - 1) + getMinK(right, 0, n - 1, 0, m - 1)) * 0.5;
+
 }
 
 const arr1 = [8, 9, 10, 12, 15, 20];
@@ -76,23 +82,57 @@ const findMid2 = (nums1, nums2) => {
         //保证n >=m
         return findMid2(nums2, nums1);
     }
+    //取长度小的m进行二分
     let left = 0;
-    let right = m - 1;
-
-    while (left < right) {
-        let mid = left + (right - left) >> 1;
-
-        let leftCount = 2 * (mid + 1);
-        let rightCount = n - (mid + 1) + m - (mid + 1);
-        if (leftCount < rightCount) {
+    let right = m;
+    let halfLen = (m + n + 1) >> 1;
+    while (left <= right) {
+        let mid = left + ((right - left) >> 1);
+        //注意位运算的优先级低
+        // let mid = parseInt((left + right) / 2);
+        let j = halfLen - mid;
+        if (mid < right && nums2[j - 1] > nums1[mid]) {
+            //mid太小了
             left = mid + 1;
-        } else if (leftCount > rightCount) {
-            right = mid;
+        } else if (mid > left && nums2[j] < nums1[mid - 1]) {
+            //mid太大了
+            right = mid - 1;
+        } else {
+            //mid ok
+            //这里存在三种情况 mid >= right; mid <= left; nums2[j] === nums1[mid]
+            let maxLeft = 0;
+            if (j === 0) {
+                // nums2[j]
+                maxLeft = nums1[mid - 1];
+            } else if (mid === 0) {
+                maxLeft = nums2[j - 1];
+            } else {
+                maxLeft = Math.max(nums1[mid - 1], nums2[j - 1]);
+            }
+
+            if ((m + n) % 2 === 1) {
+                //奇数直接返回value1
+                return maxLeft;
+            }
+
+            //偶数
+            let minRight = 0;
+            if (mid === m) {
+                minRight = nums2[j];
+            } else if (j === n) {
+                minRight = nums1[mid];
+            } else {
+                minRight = Math.min(nums1[mid], nums2[j]);
+            }
+            return (maxLeft + minRight) * 0.5;
         }
 
     }
     //left == right
-    console.log('right:', right);
+    return 0;
+
 }
 
-console.log('两个数组的中位数为：', findMid2(arr1, arr2));
+let test1 = [1, 2, 3, 9];
+let test2 = [3, 4, 5, 6];
+console.log('两个数组的中位数为：', findMid2(test1, test2));

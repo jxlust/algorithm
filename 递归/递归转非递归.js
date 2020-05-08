@@ -7,9 +7,10 @@ function Fibonacci2(num, s1 = 0, s2 = 1) {
         return s1;
     }
     // num--;
-    Fibonacci2(num--, s2, s1 + s2);
+    // num = num-1;
+    return Fibonacci2(--num, s2, s1 + s2);
 }
-
+// console.log(Fibonacci2(0));
 // function Fibonacci(num) {
 //     let a0 = 0;
 //     let a1 = 1;
@@ -42,5 +43,5 @@ function Fibonacci(num) {
     return a0;
 }
 for (let i = 0; i < 10; i++) {
-    console.log(Fibonacci(i));
+    console.log(Fibonacci2(i));
 }

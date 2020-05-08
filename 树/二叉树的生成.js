@@ -1,3 +1,8 @@
+const TreeNode = function (val) {
+    this.val = val;
+    //都是TreeNode实例
+    this.left = this.right = null;
+}
 /**
  * 数组变成完全二叉树
  * @param {number[]} arr 
@@ -61,4 +66,5 @@ const ArrayToTree2 = function (arr) {
     return lists[0];
     // console.log('lists:',lists[0]);
 }
-console.log(ArrayToTree2([1, null, null, null, 2]));
+console.log(ArrayToTree2([1, null, 2, null, 2]));
+console.log(ArrayToTree2([1, 3, 2, 5,6,7, 2]));

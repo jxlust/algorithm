@@ -55,3 +55,38 @@ var test = {
     }
 }
 console.log(levelOrder(test));
+
+
+var helper = function (root, level, result) {
+    //这里判断是第一次遍历到level层级，方法还有一种 level === result.length
+    // if(!result[level]){
+    if (level === result.length) {
+        result[level] = [root.val];
+    } else {
+        result[level].push(root.val);
+    }
+    if (root.left) {
+        helper(root.left, level + 1, result);
+    }
+    if (root.right) {
+        helper(root.right, level + 1, result);
+    }
+
+}
+/**
+ * 递归写法DFS
+ * @param {TreeNode} root
+ * @return {number[][]}
+ */
+var levelOrderDFS = function (root) {
+    //BFS
+    if (root === null) {
+        return [];
+    }
+    let result = [];
+
+    helper(root, 0, result);
+    return result;
+}
+
+console.log('DFS:', levelOrderDFS(test));

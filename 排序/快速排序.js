@@ -66,20 +66,18 @@ const quickStackSort = function (arr) {
     let statck = [];
     let i = 0;
     let j = arr.length - 1;
-    statck.push(i)
-    statck.push(j);
+    statck.push({
+        i,
+        j
+    })
     while (statck.length) {
-        let r = statck.pop();
-        let l = statck.pop();
+        let {i:l,j:r} = statck.pop();
         let tIndex = qSort(arr,l,r);
-        console.log(tIndex);
         if(tIndex - 1 > l){
-            statck.push(l);
-            statck.push(tIndex - 1);
+            statck.push({i:l,j:tIndex-1});
         }
         if(tIndex + 1 < r){
-            statck.push(tIndex + 1);
-            statck.push(r);
+            statck.push({i:tIndex+1,j:r});
         }
     }
 }

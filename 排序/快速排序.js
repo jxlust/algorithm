@@ -1,4 +1,3 @@
-
 /** 时间复杂度是O(nlog2n)
  * 从小到大的排序
  * @param {*} arr 
@@ -46,3 +45,44 @@ console.log(2, array);
 //     var newArr = arr.slice();
 //     quickSort(newArr);
 // }
+
+const quickStackSort = function (arr) {
+    const qSort = function (arr, i, j) {
+        let key = arr[i];
+        while (i < j) {
+            while (i < j && arr[j] >= key) {
+                j--;
+            }
+            arr[i] = arr[j];
+            while (i < j && arr[i] <= key) {
+                i++;
+            }
+            arr[j] = arr[i]
+        }
+        arr[i] = key;
+        return i;
+    }
+    // 模拟栈调用
+    let statck = [];
+    let i = 0;
+    let j = arr.length - 1;
+    statck.push(i)
+    statck.push(j);
+    while (statck.length) {
+        let r = statck.pop();
+        let l = statck.pop();
+        let tIndex = qSort(arr,l,r);
+        console.log(tIndex);
+        if(tIndex - 1 > l){
+            statck.push(l);
+            statck.push(tIndex - 1);
+        }
+        if(tIndex + 1 < r){
+            statck.push(tIndex + 1);
+            statck.push(r);
+        }
+    }
+}
+let arr2 = [57, 43, 99, 56, 99, 33, 56];
+quickStackSort(arr2)
+console.log('stack:',arr2);

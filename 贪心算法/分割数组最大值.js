@@ -51,3 +51,49 @@ var splitArray = function(nums, m) {
     }
     return left
 };
+
+/**
+ * 求分割数组的最大值中的最小值
+ * @param {number[]} nums
+ * @param {number} m
+ * @return {number}
+ */
+var splitArray = function (nums, m) {
+  //1.数组所有组合的最大值范围是[max(nums),sum(nums)]
+  //2.对于已知范围问题，可以采取二分查找
+  //3.直接上二分法模板
+//   let left = Math.max(...nums);
+//   let right = nums.reduce(function (pre, cur) {
+//     return pre + cur
+//   })
+  let left = 0,right = 0;
+  for(let i of nums){
+    left = left > i ? left : i;
+    right += i;
+  }
+  
+  while (left < right) {
+    let mid = (left + right) >>> 1;
+    //下面是高能代码：贪心算法思路
+    //1.现在对数组凑满足和不小于mid的子数组的个数count
+    //分割初始值为1
+    let count = 1;
+    let subSum = 0;
+    for (let i = 0; i < nums.length; i++) {
+      if (subSum + nums[i] > mid) {
+        count++;
+        subSum = nums[i]
+      }else{
+        subSum += nums[i]
+      }
+    }
+    //常规二分逻辑判断
+    //如果个数count比m大，说明mid偏小了
+    if (count <= m) {
+      right = mid
+    } else {
+      left = mid + 1
+    }
+  }
+  return left;
+}

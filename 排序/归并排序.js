@@ -8,6 +8,38 @@
 将两个排序好的子序列合并成一个最终的排序序列。
 */
 
+const mergeSort = function (arr, left = 0, right = arr.length - 1) {
+  const merge = function (arr1, arr2) {
+    // let newArr = new Array(arr1.length + arr2.length)
+    let newArr = [];
+
+    let k = 0,
+      i = 0,
+      j = 0;
+    while (i < arr1.length && j < arr2.length) {
+      if (arr1[i] > arr2[j]) {
+        newArr[k++] = arr2[j++];
+      } else {
+        newArr[k++] = arr1[i++];
+      }
+    }
+    while (i < arr1.length) {
+      newArr[k++] = arr1[i++]
+    }
+    while (j < arr2.length) {
+      newArr[k++] = arr2[j++]
+    }
+    // console.log(newArr,'n');
+    return newArr;
+  }
+  if (left >= right) {
+    return [arr[left]]
+  }
+  let mid = (left + right) >> 1;
+  return merge(mergeSort(arr, left, mid), mergeSort(arr, mid + 1, right))
+
+}
+
 function mergeSort(arr) {
     let length = arr.length;
     if (length < 2) {

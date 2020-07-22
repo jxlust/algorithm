@@ -104,12 +104,18 @@ class TimSort {
     return temp;
   }
   insertionSortByBinary(arr) {
-    //这个方法感觉对数据进行拼接性能消耗较多
+    
     let size = arr.length;
     for (let i = 1; i < size; i++) {
       let cur = arr[i];
       let pos = this.binarySearch(arr, 0, i - 1, cur);
-      arr = arr.slice(0, pos).concat([cur], arr.slice(pos, i), arr.slice(i + 1))
+      //这个方法对数据进行拼接性能消耗较多
+//       arr = arr.slice(0, pos).concat([cur], arr.slice(pos, i), arr.slice(i + 1))
+      //优化
+      for(let j = i; j > pos; j --){
+        arr[j] = arr[j--]
+      }
+      arr[pos] = cur;
     }
     return arr
   }

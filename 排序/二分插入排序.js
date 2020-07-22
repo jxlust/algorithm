@@ -4,14 +4,14 @@
   */
  const binaryInsertSort = function (arr, left = 0, right = arr.length) {
    const binarySearch = (arr, left, right, key) => {
-     //这里得判断一下没进入循环的情况
-     if (left >= right) {
-       if (arr[left] >= key) {
-         return left + 1;
-       } else {
-         return left;
-       }
-     }
+//      //这里得判断一下没进入循环的情况
+//      if (left >= right) {
+//        if (arr[left] >= key) {
+//          return left + 1;
+//        } else {
+//          return left;
+//        }
+//      }
      while (left < right) {
        let mid = left + ((right - left) >> 1);
        if (arr[mid] > key) {

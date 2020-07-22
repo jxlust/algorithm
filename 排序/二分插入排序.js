@@ -23,8 +23,8 @@
      return left;
 
    }
-   let size = arr.length;
-   if (!size) {
+//    let size = arr.length;
+   if (right - left <= 1) {
      return;
    }
    for (let i = left + 1; i < right; i++) {

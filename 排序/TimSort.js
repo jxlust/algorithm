@@ -28,7 +28,7 @@
 class TimSort {
   constructor(arr) {
     this.arr = arr;
-    this.MIN_MERGE = 64;
+    this.MIN_MERGE = 32;
     // this.MIN_MERGE = 32;
     this.size = arr.length;
     this.runs = []; //存放所有的有序run区块
@@ -121,11 +121,10 @@ class TimSort {
    */
   binaryInsertionSort(arr, left, right, start) {
     // let size = arr.length;
-    console.log(1, start);
     for (let i = start; i < right; i++) {
       let cur = arr[i];
       let pos = this.binarySearch(arr, left, i - 1, cur);
-      console.log(pos, 'pos');
+
       //这个方法对数据进行拼接性能消耗较多
       //arr = arr.slice(0, pos).concat([cur], arr.slice(pos, i), arr.slice(i + 1))
       //优化
@@ -169,6 +168,11 @@ class TimSort {
       arr[right--] = temp;
     }
   }
+  /*
+   * @param left run中首个元素的位置
+   * @param right run中最后一个元素的后面一个位置，需要确保lo<hi
+   * @return 从首个元素开始的最长升序子序列的结尾位置+1 or 严格的降序子序列的结尾位置+1。
+   */
   countAndMakeRun(left, right) {
     let runHi = left + 1;
     if (runHi === right) {
@@ -194,9 +198,6 @@ class TimSort {
     return runHi - left;
 
   }
-  timsort(arr, from, to) {
-
-  }
   sort() {
     if (this.size < 2) {
       return
@@ -208,10 +209,49 @@ class TimSort {
       this.binaryInsertionSort(this.arr, 0, this.size, initRunLen);
       return;
     }
+
+    /**
+     * March over the array once, left to right, finding natural runs,
+     * extending short natural runs to minRun elements, and merging runs
+     * to maintain stack invariant.
+     *
+     * 下面将进入算法流程的主体,首先理解源码注释中run的含义，可以理解为升序序列的意思。
+     *
+     * 从左到右，遍历一边数组。找出自然排好序的序列(natural run)，把短的自然升序序列通过二叉查找排序
+     * 扩展到minRun长度的升序序列。最后合并栈中的所有升序序列，保证规则不变。
+     */
     let minRunLength = this.getMinrun(this.size);
+    console.log('minRunlength:', minRunLength);
     let remainLength = this.size;
+    let low = 0,
+      hight = this.size;
+    // let runsArray = [];
+    do {
 
+      let curRunLength = this.countAndMakeRun(low, hight);
+      console.log(curRunLength, 'xxxx');
+      // If run is short, extend to min(minRun, nRemaining)
+      // 如果 自然升序的长度不够minRun，就把 min(minRun,nRemaining)长度的范围内的数列排好序
+      if (curRunLength < minRunLength) {
+        let diff = remainLength <= minRunLength ? remainLength : minRunLength;
+        this.binaryInsertionSort(this.arr, low, low + diff, low + curRunLength);
+        curRunLength = diff;
+      }
+      // runsArray.push({
+      //   start: low,
+      //   size: curRunLength
+      // })
+      // runsArray.push(this.arr.slice(low, low + curRunLength))
+      low += curRunLength;
 
+      remainLength -= curRunLength;
+
+    } while (remainLength != 0);
+    // console.log('分区后', runsArray);
+
+  }
+
+  simple() {
     //划分run区
     let runs = []; //存放所有runs区块的集合
     let newRuns = [this.arr[0]]; //新的run区块
@@ -247,8 +287,12 @@ class TimSort {
   }
 }
 let test = [9, 1, 0, 4, 8, 45, 2, 3, 4, 82, 99, 123, 45, 8, 99, 12, 234, 2, 99]
+for (let i = 1; i < 50; i++) {
+  test.push(i)
+}
 let timSort = new TimSort(test)
 // console.log('求分run位置：', timSort.countAndMakeRun(0, test.length));
 // console.log('新的arr:', test);
+
 console.log('timsort后：', timSort.sort());
-console.log('排序后：', test);
+console.log('排序后：', JSON.stringify(test));

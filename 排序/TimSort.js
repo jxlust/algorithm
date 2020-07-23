@@ -7,6 +7,7 @@
 // + N：输入数组的长度
 // + run：输入数组中的有序子数组。同时，顺序是不降序或严格降序，即“ a0≤a1≤a2≤…»或«a0> a1> a2>…”(为了保证稳定性)
 // + minrun：如上所述，在算法的第一步中，将输入数组拆分为run。minrun是这种运行的最小长度。该数字是由某些逻辑从N数计算得出的。
+// + 调整, 新的 run 被压入 pendingRuns 时保证栈内任意3个连续的 run（run0, run1, run2）从下至上满足run0>run1+run2 && run1>run2 ，不满足的话进行调整直至满足。
 
 //参考网址：https://www.infopulse.com/blog/timsort-sorting-algorithm/
 // Step 1. Splitting into Runs and Their Sorting.
@@ -27,12 +28,14 @@
 class TimSort {
   constructor(arr) {
     this.arr = arr;
-    this.NEED_MAX_LENGTH = 64;
+    this.MIN_MERGE = 64;
+    // this.MIN_MERGE = 32;
     this.size = arr.length;
+    this.runs = []; //存放所有的有序run区块
   }
   getMinrun(n) {
     let r = 0;
-    while (n >= this.NEED_MAX_LENGTH) {
+    while (n >= this.MIN_MERGE) {
       r |= n & 1;
       n >>= 1;
     }
@@ -103,24 +106,40 @@ class TimSort {
     }
     return temp;
   }
-  insertionSortByBinary(arr) {
-    
-    let size = arr.length;
-    for (let i = 1; i < size; i++) {
+  /**
+   * * 被优化的二分插入排序
+   *
+   * 使用二分插入排序算法给指定一部分数组排序。这是给小数组排序的最佳方案。最差情况下
+   * 它需要 O(n log n) 次比较和 O(n^2)次数据移动。
+   *
+   * 如果开始的部分数据是有序的那么我们可以利用它们。这个方法默认数组中的位置lo(包括在内)到
+   * start(不包括在内)的范围内是已经排好序的。
+   * @param {*} arr 被排序的数组
+   * @param {*} left  待排序范围内的首个元素的位置
+   * @param {*} right 待排序范围内最后一个元素的后一个位置
+   * @param {*} start  待排序范围内的第一个没有排好序的位置，确保 (lo <= start <= hi)
+   */
+  binaryInsertionSort(arr, left, right, start) {
+    // let size = arr.length;
+    console.log(1, start);
+    for (let i = start; i < right; i++) {
       let cur = arr[i];
-      let pos = this.binarySearch(arr, 0, i - 1, cur);
+      let pos = this.binarySearch(arr, left, i - 1, cur);
+      console.log(pos, 'pos');
       //这个方法对数据进行拼接性能消耗较多
-//       arr = arr.slice(0, pos).concat([cur], arr.slice(pos, i), arr.slice(i + 1))
+      //arr = arr.slice(0, pos).concat([cur], arr.slice(pos, i), arr.slice(i + 1))
       //优化
-      for(let j = i; j > pos; j --){
-        arr[j] = arr[j--]
+      // let distance = i - pos;
+      // switch语句是一条小优化，1-2个元素的移动就不需要了。 
+      for (let j = i; j > pos; j--) {
+        arr[j] = arr[j - 1]
       }
       arr[pos] = cur;
     }
-    return arr
+    //内部排序完成
   }
   /**
-   * 插入排序
+   * 普通插入排序
    * @param {Number[]} arr 
    */
   insertionSort(arr) {
@@ -143,12 +162,56 @@ class TimSort {
     let mid = (left + right) >>> 1;
     return this.merge(this.mergeRuns(arr, left, mid), this.mergeRuns(arr, mid + 1, right))
   }
-  sort() {
-    let minRun = this.getMinrun(this.size);
+  reverseRange(arr, left, right) {
+    while (left < right) {
+      let temp = arr[left];
+      arr[left++] = arr[right];
+      arr[right--] = temp;
+    }
+  }
+  countAndMakeRun(left, right) {
+    let runHi = left + 1;
+    if (runHi === right) {
+      //只有一个元素
+      return 1;
+    }
+    //思路：两个连续数要不就是按照严格降序，要不就是升序
+    if (this.arr[runHi++] < this.arr[left]) {
+      //前两个元素是严格降序就按降序统计
+      while (runHi < right && this.arr[runHi] < this.arr[runHi - 1]) {
+        runHi++;
+      }
+      //这里把降序区域正序
+      console.log(runHi, 9);
+      this.reverseRange(this.arr, left, runHi - 1)
+    } else {
+      //按升序
+      while (runHi < right && this.arr[runHi] >= this.arr[runHi - 1]) {
+        runHi++;
+      }
+    }
 
-    if (!this.arr.length) {
+    return runHi - left;
+
+  }
+  timsort(arr, from, to) {
+
+  }
+  sort() {
+    if (this.size < 2) {
       return
     }
+    // 小于MIN_MERGE长度的数组就不用归并排序了，杀鸡焉用宰牛刀
+    if (this.size < this.MIN_MERGE) {
+      let initRunLen = this.countAndMakeRun(0, this.size);
+      // binarySort(a, lo, hi, lo + initRunLen, c);
+      this.binaryInsertionSort(this.arr, 0, this.size, initRunLen);
+      return;
+    }
+    let minRunLength = this.getMinrun(this.size);
+    let remainLength = this.size;
+
+
     //划分run区
     let runs = []; //存放所有runs区块的集合
     let newRuns = [this.arr[0]]; //新的run区块
@@ -183,6 +246,9 @@ class TimSort {
     // console.log('最终排序后：', sortArr);
   }
 }
-let test = [1, 0, 4, 8, 45, 2, 3, 4, 82, 99, 123, 45, 8, 99, 12, 234, 2, 99]
+let test = [9, 1, 0, 4, 8, 45, 2, 3, 4, 82, 99, 123, 45, 8, 99, 12, 234, 2, 99]
 let timSort = new TimSort(test)
+// console.log('求分run位置：', timSort.countAndMakeRun(0, test.length));
+// console.log('新的arr:', test);
 console.log('timsort后：', timSort.sort());
+console.log('排序后：', test);

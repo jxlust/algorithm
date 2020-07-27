@@ -32,6 +32,18 @@ class TimSort {
     // this.MIN_MERGE = 32;
     this.size = arr.length;
     this.runs = []; //存放所有的有序run区块
+
+    /**
+     * 栈中待归并的run的数量。一个run i的范围从runBase[i]开始，一直延续到runLen[i]。
+     * 下面这个根据前一个run的结尾总是下一个run的开头。
+     * 所以下面的等式总是成立:
+     * runBase[i] + runLen[i] == runBase[i+1];
+     **/
+
+    this.stackSize = 0; //栈中run的数量
+    this.runStack = [];
+    // this.runLen = [];
+
   }
   getMinrun(n) {
     let r = 0;
@@ -60,15 +72,17 @@ class TimSort {
         left = mid + 1;
       }
     }
-    if (left == right) {
-      if (arr[left] <= value) {
-        return left + 1;
-      } else {
-        return left;
-      }
-    } else {
-      throw new RangeError('索引不合法');
-    }
+    //left === right
+    return left;
+    // if (left == right) {
+    //   if (arr[left] <= value) {
+    //     return left + 1;
+    //   } else {
+    //     return left;
+    //   }
+    // } else {
+    //   throw new RangeError('索引不合法');
+    // }
   }
   /**
    * 归并排序数组
@@ -237,20 +251,70 @@ class TimSort {
         this.binaryInsertionSort(this.arr, low, low + diff, low + curRunLength);
         curRunLength = diff;
       }
-      // runsArray.push({
-      //   start: low,
-      //   size: curRunLength
-      // })
+
       // runsArray.push(this.arr.slice(low, low + curRunLength))
+
+      // Push run onto pending-run stack, and maybe merge
+      //把已经排好序的数列压入栈中，检查是不是需要合并
+      this.pushStack(low, curRunLength);
+      this.mergeCollapse();
+
       low += curRunLength;
 
       remainLength -= curRunLength;
 
     } while (remainLength != 0);
     // console.log('分区后', runsArray);
-
+    console.assert(low === hight)
+    this.mergeForceCollapse();
+    console.assert(this.stackSize === 1, 'stacksize不为1');
   }
 
+  /**
+   * 检查栈中待归并的升序序列，如果他们不满足下列条件就把相邻的两个序列合并，
+   * 直到他们满足下面的条件
+   *
+   * 1. runLen[i - 3] > runLen[i - 2] + runLen[i - 1]
+   * 2. runLen[i - 2] > runLen[i - 1]
+   *
+   * 每次添加新序列到栈中的时候都会执行一次这个操作。所以栈中的需要满足的条件
+   * 需要靠调用这个方法来维护。
+   *
+   */
+  mergeCollapse() {
+    while (this.stackSize > 1) {
+      let n = this.stackSize - 2;
+      if (n > 0 && this.runStack[n - 1].length <= this.runStack[n].length + this.runStack[n + 1].length) {
+        if (this.runStack[n - 1].length < this.runStack[n + 1].length) {
+          n--;
+        }
+        this.mergeAt(n);
+      } else if (this.runStack[n].length <= this.runStack[n + 1].length) {
+        this.mergeAt(n)
+      } else {
+        break;
+      }
+    }
+  }
+  /**
+   * 合并在栈中位于i和i+1的两个相邻的升序序列。 i必须为从栈顶数，第二和第三个元素。
+   * 换句话说i == stackSize - 2 || i == stackSize - 3
+   *
+   * @param n 待合并的第一个序列所在的位置
+   */
+  mergeAt(n) {
+
+  }
+  pushStack(start, length) {
+    this.runStack[this.stackSize++] = {
+      start,
+      length
+    }
+  }
+
+  /**
+   * 简单思路
+   */
   simple() {
     //划分run区
     let runs = []; //存放所有runs区块的集合
@@ -285,6 +349,7 @@ class TimSort {
     return sortArr;
     // console.log('最终排序后：', sortArr);
   }
+
 }
 let test = [9, 1, 0, 4, 8, 45, 2, 3, 4, 82, 99, 123, 45, 8, 99, 12, 234, 2, 99]
 for (let i = 1; i < 50; i++) {

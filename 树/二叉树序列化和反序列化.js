@@ -10,6 +10,8 @@ function TreeNode(val) {
   this.val = val;
   this.left = this.right = null;
 }
+
+/****** 层序遍历进行序列化和反序列化 ******  /
 /**
  * Encodes a tree to a single string.
  *
@@ -75,6 +77,75 @@ var deserialize = function (data) {
   }
   return root
 };
+
+
+/****** 前序遍历进行序列化和反序列化 ******  /
+/**
+ * Encodes a tree to a single string.
+ *
+ * @param {TreeNode} root
+ * @return {string}
+ */
+var serialize2 = function (root) {
+  let stack = [];
+  if (!root) {
+    return '#,'
+  }
+  let str = ''
+  stack.push(root)
+  while (stack.length) {
+    let cur = stack.pop();
+    if (cur) {
+      str += cur.val + ','
+      stack.push(cur.right)
+      stack.push(cur.left)
+    } else {
+      str += '#,'
+    }
+
+  }
+  return str;
+}
+
+/**
+ * Decodes your encoded data to tree.
+ *
+ * @param {string} data
+ * @return {TreeNode}
+ */
+var deserialize2 = function (data) {
+  const getNode = (val) => {
+    if (val === '#') {
+      return null;
+    } else {
+      return new TreeNode(val)
+    }
+  }
+  let arr = data.split(',');
+  // [ '1', '2', '#', '#', '3', '4', '#', '#', '5', '#', '6', '#', '#', '' ]
+  let stack = [];
+  let index = 0;
+  let root = getNode(arr[index++]);
+  let cur = root;
+
+  while (cur || stack.length) {
+    if (cur) {
+      stack.push(cur);
+      cur.left = getNode(arr[index++]);
+      cur = cur.left;
+    } else {
+      cur = stack.pop();
+      cur.right = getNode(arr[index++]);
+      cur = cur.right;
+    }
+
+  }
+
+  return root;
+
+}
+
+
 // let test = '1,2,3,null,null,4,5'
 // let deNode = deserialize(test);
 // console.log('反序列化：', deNode);
@@ -103,9 +174,9 @@ let tree = {
     left: null
   }
 }
-let string = serialize(tree);
+let string = serialize2(tree);
 console.log('序列化：', string);
-let node = deserialize(string)
+let node = deserialize2(string)
 console.log('反序列化：', JSON.stringify(node));
 /**
  * Your functions will be called as such:

@@ -1,3 +1,5 @@
+// 改生成方法测试使用，更好的方法参考 二叉树的序列化和反序列化
+
 const TreeNode = function (val) {
     this.val = val;
     //都是TreeNode实例

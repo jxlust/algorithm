@@ -104,31 +104,35 @@ var lowestCommonAncestor3 = function (root, p, q) {
 }
 
 const searchNode = function (root, node) {
-  if (root == null || node == null) return;
+  if (root == null || node == null) return [];
   let s = [];
   let p = root;
   let pre = null; //上一次出栈的结点
-  while (p != null || s.length) {
-    while (p != null) {
+  while (p || s.length) {
+    while (p) {
       //这个while循环的思想还是一直往左找，找的过程结点入栈，如果找到了就打印输出并返回。
       s.push(p);
       if (p.val == node.val) {
-        return;
+        return s;
       }
+      console.log(1,p);
       p = p.left;
     }
     //走到这一步说明栈顶元素的左子树为null，那么就开始往栈顶元素的右子树上去找。
     if (s.length) {
       p = s[s.length - 1];
       //如果栈顶元素的右子树为null，或者右子树被遍历过，则弹栈。
+      console.log(2,p);
       while (p.right == null || pre != null && p.right == pre) {
         pre = s.pop();
         p = s[s.length - 1];
       }
+      console.log(3,p);
       //继续遍历p的右子树
       p = p.right;
     }
   }
+  return s;
 }
 
 let root = {
@@ -152,6 +156,7 @@ let root = {
     right: null
   }
 }
+
 let p = {
   val: 3,
   left: null,
@@ -162,4 +167,6 @@ let q = {
   left: null,
   right: null
 }
-lowestCommonAncestor(root, p, q)
+searchNode(root,q)
+
+// lowestCommonAncestor(root, p, q)

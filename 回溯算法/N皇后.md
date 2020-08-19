@@ -144,3 +144,72 @@ var solveNQueens = function (n) {
 };
 
 ```
+### 优化2
+代码：
+```javascript
+/**
+ * @param {number} n
+ * @return {string[][]}
+ */
+var solveNQueens = function (n) {
+  //分析：
+  //1.对角线不能放置棋子
+  //2.每行每列最多放置一个棋子
+  let res = [];
+  // let visited = [];
+  let path = new Array(n);
+  for (let i = 0; i < n; i++) {
+    path[i] = new Array(n).fill('.')
+  }
+  const isCant = function (arr, x, y) {
+    for (let i = x; i >= 0; i--) {
+      if (arr[i][y] === 'Q') {
+        return true;
+      }
+    }
+    //斜左上
+    for (let i = x - 1, j = y - 1; i >= 0 && j >= 0; i--, j--) {
+      if (arr[i][j] === 'Q') {
+        return true;
+      }
+    }
+    //斜右上
+    for (let i = x - 1, j = y + 1; i >= 0 && j < n; i--, j++) {
+      if (arr[i][j] === 'Q') {
+        return true;
+      }
+    }
+    return false;
+  }
+  //路径和选择列表
+  const backtrack = function (path, deep) {
+    if (deep === n) {
+      //搜索完成一条路径
+      path = path.map(item => item.join(''))
+      res.push([...path])
+      return;
+    }
+    //遍历选择列表
+    for (let i = 0; i < n; i++) {
+      //主要是斜的方向上
+      if (isCant(path, deep, i)) continue;
+      //做选择      
+      path[deep][i] = 'Q';
+      // let index = (deep + 1) * n + i;
+      // visited[deep][i] = true;
+      // let strArray = new Array(n).fill('.');
+      // strArray[i] = 'Q';
+      // path.push(strArray.join(''))
+      //继续DFS
+      backtrack(path, deep + 1);
+      //撤销选择
+      path[deep][i] = '.';
+      // visited[deep][i] = false;
+      // path.pop();
+    }
+
+  }
+  backtrack(path, 0);
+  return res;
+};
+```

@@ -126,7 +126,6 @@ var solveNQueens = function (n) {
             //主要是斜的方向上
             if (isCant(visited, deep, i)) continue;
             //做选择
-            // let index = (deep + 1) * n + i;
             visited[deep][i] = true;
             let strArray = new Array(n).fill('.');
             strArray[i] = 'Q';
@@ -195,17 +194,10 @@ var solveNQueens = function (n) {
       if (isCant(path, deep, i)) continue;
       //做选择      
       path[deep][i] = 'Q';
-      // let index = (deep + 1) * n + i;
-      // visited[deep][i] = true;
-      // let strArray = new Array(n).fill('.');
-      // strArray[i] = 'Q';
-      // path.push(strArray.join(''))
       //继续DFS
       backtrack(path, deep + 1);
       //撤销选择
       path[deep][i] = '.';
-      // visited[deep][i] = false;
-      // path.pop();
     }
 
   }
@@ -233,9 +225,6 @@ var totalNQueens = function (n) {
   let dales = []; //上坡，主对角线上存有数据状态标记数组
   let hills = []; //斜坡，副对角线标记数组
   let doubleN = 2 * n;
-  // for (let i = 0; i < n; i++) {
-  //   res[i] = new Array(n).fill('.');
-  // }
   const isCant = function (res, dales, hills, x, y) {
     return res[y] || dales[x + y] || hills[x - y + doubleN]
   }
@@ -252,17 +241,14 @@ var totalNQueens = function (n) {
       dales[deep + i] = 1;
       hills[deep - i + doubleN] = 1;
       backtrack(path, dales, hills, deep + 1);
-      // path[deep][i] = '.';
       //撤销记录
       path[i] = 0;
       dales[deep + i] = 0;
       hills[deep - i + doubleN] = 0;
     }
-
   }
 
   backtrack(res, dales, hills, 0)
-
   return count;
 };
 ```

@@ -218,7 +218,7 @@ var solveNQueens = function (n) {
 利用对角线的特性
 代码：
 ```javascript
-
+ 
 /**
  * 根据对角线的特性，可以分析出
  * 主对角线：i+j === 常熟
@@ -237,7 +237,7 @@ var totalNQueens = function (n) {
   //   res[i] = new Array(n).fill('.');
   // }
   const isCant = function (res, dales, hills, x, y) {
-    return res[i] || dales[x + y] || hills[x - y + doubleN]
+    return res[y] || dales[x + y] || hills[x - y + doubleN]
   }
 
   const backtrack = function (path, dales, hills, deep) {

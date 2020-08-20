@@ -213,3 +213,56 @@ var solveNQueens = function (n) {
   return res;
 };
 ```
+
+### N皇后求解决方案数量
+利用对角线的特性
+代码：
+```javascript
+
+/**
+ * 根据对角线的特性，可以分析出
+ * 主对角线：i+j === 常熟
+ * 副对角线：i-j === 常熟，为了好记录这里变成一定是正数, i-j + 2n === 正整数常熟
+ * 上面处理+2n,是保证每条对角线常熟唯一（不重复）
+ * @param {number} n
+ * @return {number}
+ */
+var totalNQueens = function (n) {
+  let count = 0;
+  let res = []; //记录列
+  let dales = []; //上坡，主对角线上存有数据状态标记数组
+  let hills = []; //斜坡，副对角线标记数组
+  let doubleN = 2 * n;
+  // for (let i = 0; i < n; i++) {
+  //   res[i] = new Array(n).fill('.');
+  // }
+  const isCant = function (res, dales, hills, x, y) {
+    return res[i] || dales[x + y] || hills[x - y + doubleN]
+  }
+
+  const backtrack = function (path, dales, hills, deep) {
+    if (deep === n) {
+      count++;
+      return;
+    }
+    for (let i = 0; i < n; i++) {
+      if (isCant(path, dales, hills, deep, i)) continue;
+      //记录
+      path[i] = 1;
+      dales[deep + i] = 1;
+      hills[deep - i + doubleN] = 1;
+      backtrack(path, dales, hills, deep + 1);
+      // path[deep][i] = '.';
+      //撤销记录
+      path[i] = 0;
+      dales[deep + i] = 0;
+      hills[deep - i + doubleN] = 0;
+    }
+
+  }
+
+  backtrack(res, dales, hills, 0)
+
+  return count;
+};
+```

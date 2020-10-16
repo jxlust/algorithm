@@ -40,7 +40,11 @@ var minDistance = function (word1, word2) {
 
   //综上 当s[i] != s[j]的时候 次数= Min(minDistance(s[0,i],s[0,j-1]) + 1,minDistance(s[0,i-1],s[0,j]) + 1, minDistance(s[0,i-1],s[0,j-1]) + 1)
 
+  //结束条件： i === 0
+
   //上面是自顶向下的递归思路，实现代码如下
-  
+  const helper = function () {
+    
+  }
 
 };

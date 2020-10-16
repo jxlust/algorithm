@@ -43,8 +43,21 @@ var minDistance = function (word1, word2) {
   //结束条件： i === 0
 
   //上面是自顶向下的递归思路，实现代码如下
-  const helper = function () {
-    
+  // let count = 0;
+  const helper = function (i, j, count) {
+    if (i === 0) {
+      return count
+    }
+    if (word1[i] === word2[j]) {
+      console.log(i,j,word1[i]);
+      return helper(--i, --j,count)
+    } else {
+      return Math.min(helper(i, j - 1,count) + 1, helper(i - 1, j,count) + 1, helper(i - 1, j - 1,count) + 1)
+    }
+
   }
 
+ return  helper(word1.length - 1, word2.length - 1, 0)
+
 };
+console.log(minDistance('horse','ros'));

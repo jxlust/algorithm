@@ -1,4 +1,32 @@
 /**
+ * 分析易得当前装水量跟 左右两侧最大值有关系
+ * @param {number[]} nums 
+ */
+var trap = function (nums) {
+  if (nums.length < 2) {
+    return 0;
+  }
+  let lMax = new Array(nums.length),
+    rMax = new Array(nums.length);
+  lMax[0] = nums[0];
+  rMax[nums.length - 1] = nums[nums.length - 1]
+  for (let i = 1; i < nums.length; i++) {
+    lMax[i] = Math.max(lMax[i - 1], nums[i])
+  }
+  for (let i = nums.length - 2; i >= 0; i--) {
+    rMax[i] = Math.max(nums[i], rMax[i + 1]);
+  }
+  //备忘录记录了各个数左侧的最大值即leftMax[0,i]和右侧最大值rightMax[i,length-1]
+  //当前点装水量 =  min(leftMax,rightMax) - curHeight
+  let ret = 0;
+  for (let i = 0; i < nums.length; i++) {
+    ret += Math.min(lMax[i], rMax[i]) - nums[i]
+  }
+  return ret;
+
+}
+
+/**
  *  接雨水
  * 
  * 给定n个非负整数表示宽度为1的高度图，计算下雨后堆积的雨水

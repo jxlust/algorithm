@@ -13,8 +13,8 @@ var longestCommonSubsequence = function (text1, text2) {
   //1.定义dp, dp[i][j] 表示text1[0,i] 和 text2[0,j]两个字符串的最长公共子序列长度
   //2.画表格 dp table
   //3.base case dp[0][0] = 0,dp[i][0] = 0 易知道
-  //4.状态转移方程 dp[i][j] = text1[i] === text2[j] ? Max(pre) + 1: Max(pre)
-  //5.这里的pre就是dp[i-1][j] dp[i][j-1] dp[i-1][j-1];
+  //4.状态转移方程 dp[i][j] = text1[i] === text2[j] ? pre + 1: Max(dp[i-1][j],dp[i][j-1])
+  //5.这里的pre就是 dp[i-1][j-1];
   //6.编码 
   let m = text1.length,
     n = text2.length;

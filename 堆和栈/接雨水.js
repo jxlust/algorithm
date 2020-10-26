@@ -26,6 +26,9 @@ var trap = function (nums) {
 
 }
 
+//基于上面的思路，可以优化空间复杂度
+//对于左右两侧的最大值的最小值可以用一个变量记录下来就行
+//首尾双指针同时遍历
 /**
  *  接雨水
  * 
@@ -36,35 +39,37 @@ var trap = function (nums) {
  */
 
 const trap = function (nums) {
-  let result = 0;
-  //双指针优化了空间复杂度O(1)
+  let left = 0,
+    right = nums.length - 1;
+  let lMax = nums[0],
+    rMax = nums[nums.length - 1];
+  let ret = 0;
+  while (left <= right) {
+    //这里两条可以放入分支中，减少重复计算
+//     lMax = Math.max(lMax, nums[left])
+//     rMax = Math.max(rMax, nums[right])
+    
+    //lmax是代表[0,left]最大值，rmax表示的是[right,n-1]最大值
+    //这里是双指针优化思路的精髓，很巧妙
+    //对于left该点来说，且 lmax < rmax，因为是取左右两侧的最大值的最小值，lmax一定是left要找的结果
+    //对于right该点，且 rmax <= lmax, rmax一定是right要找的结果，用于计算
+    if (lMax < rMax) {
+      ret += lMax - nums[left++]
+      lMax = Math.max(lMax, nums[left])
+    } else {
+      ret += rMax - nums[right--]
+      rMax = Math.max(rMax, nums[right])
+    }
+  }
 
+  return ret;
+
+}
+const trapPerfect = function (height) {
   // 通过上面的计算，确定left和right的值之后，在left和right之间相当于构成了一个桶，桶的高度是最矮的那根柱子。
   // 然后我们从两边往中间逐个查找，如果查找的柱子高度小于桶的高度，那么盛水量就是桶的高度减去我们查找的柱子高度，如果查找的柱子大于桶的高度，我们要更新桶的高度。我们来看下最终代码
 
   //如果从左边开始，高度是递增的是装不了水的，同理右边也是一样
-  let left = 0;
-  let right = nums.length - 1;
-  let leftMax = 0;
-  let rightMax = 0;
-  while (left < right) {
-
-    // let height = nums[left] > nums[right] ? nums[right] : nums[left];
-    leftMax = Math.max(nums[left], leftMax);
-    rightMax = Math.max(nums[right], rightMax);
-
-    if (leftMax < rightMax) {
-      //桶的高度leftmax
-      result += leftMax - nums[left++]
-    } else {
-      result += rightMax - nums[right--]
-    }
-
-  }
-  return result;
-
-}
-const trapPerfect = function (height) {
   let result = 0;
   let left = 0;
   let right = height.length - 1;

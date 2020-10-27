@@ -48,3 +48,23 @@ var longestPalindromeSubseq = function (s) {
   // console.log(dp);
   return dp[0]
 };
+
+//状态压缩另一个方向上的
+var longestPalindromeSubseq = function (s) {
+  let n = s.length;
+  let dp = new Array(n).fill(0);
+  let last = 0;
+  dp[0] = 1;
+  //动态规划
+  for (let j = 1; j < n; j++) {
+    last = 0;
+    dp[j] = 1;
+    for (let i = j - 1; i >= 0; i--) {
+      let temp = dp[j-1];
+      dp[j] = s[i] === s[j] ? last + 2 : Math.max(dp[j - 1], dp[j])
+      last = temp;
+    }
+  }
+  // console.log(dp); //[ 1, 1, 1, 2, 2, 4 ]
+  return dp[n-1]
+};

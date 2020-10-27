@@ -8,7 +8,7 @@
  * @param {string} text2
  * @return {number}
  */
-var longestCommonSubsequence = function (text1, text2) {
+const longestCommonSubsequence = function (text1, text2) {
   // 做过编辑距离，这题就很简单了
   //1.定义dp, dp[i][j] 表示text1[0,i] 和 text2[0,j]两个字符串的最长公共子序列长度
   //2.画表格 dp table
@@ -43,7 +43,7 @@ console.log(longestCommonSubsequence('abcde', 'bdfge'));
  * @param {string} text2
  * @return {string} 最长公共子序列字符串
  */
-var longestCommonSubsequenceString = function (text1, text2) {
+const longestCommonSubsequenceString = function (text1, text2) {
   let m = text1.length,
     n = text2.length;
   let dp = new Array(n + 1);

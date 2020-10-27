@@ -35,3 +35,32 @@ var longestCommonSubsequence = function (text1, text2) {
 };
 
 console.log(longestCommonSubsequence('abcde', 'bdfge'));
+
+
+/**
+ * 
+ * @param {string} text1
+ * @param {string} text2
+ * @return {string} 最长公共子序列字符串
+ */
+var longestCommonSubsequenceString = function (text1, text2) {
+  let m = text1.length,
+    n = text2.length;
+  let dp = new Array(n + 1);
+  for (let j = 0; j <= n; j++) {
+    dp[j] = new Array(m + 1)
+    dp[j][0] = 0;
+  }
+  //base case 初始化了等于 0
+  let str = [];
+  for (let i = 1; i <= m; i++) {
+    dp[0][i] = 0;
+    for (let j = 1; j <= n; j++) {
+      dp[j][i] = text2[j - 1] === text1[i - 1] ? (str[dp[j-1][i-1]] = text1[i-1], dp[j - 1][i - 1] + 1): Math.max(dp[j - 1][i], dp[j][i - 1]);
+    }
+  }
+  console.log(dp[n][m]);
+  return str.join('');
+};
+ 
+console.log(longestCommonSubsequenceString('abbcde', 'bbdbge'));//bbde

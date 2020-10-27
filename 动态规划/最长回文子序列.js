@@ -28,3 +28,23 @@ var longestPalindromeSubseq = function (s) {
     }
     return dp[n - 1][0]
 };
+
+//状态压缩，进阶，难点，但是也可以通过画的图标分析出一位数组的计算过程
+var longestPalindromeSubseq = function (s) {
+  let n = s.length;
+  let dp = new Array(n).fill(0);
+  let last = 0;
+  dp[0] = 1;
+  //动态规划
+  for (let j = 1; j < n; j++) {
+    last = 0;
+    dp[j] = 1;
+    for (let i = j - 1; i >= 0; i--) {
+      let temp = dp[i];
+      dp[i] = s[i] === s[j] ? last + 2 : Math.max(dp[i + 1], dp[i])
+      last = temp;
+    }
+  }
+  // console.log(dp);
+  return dp[0]
+};

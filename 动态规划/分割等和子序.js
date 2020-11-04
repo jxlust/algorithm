@@ -1,10 +1,3 @@
-## 参考回溯算法目录
-[目标和.md 链接](https://github.com/jxlust/algorithm/tree/master/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95)
-
-## 目标和题型——分割等和子序
-
-### 解法1：基本回溯算法
-```javascript
 /**
  * @param {number[]} nums
  * @return {boolean}
@@ -45,11 +38,9 @@ var canPartition = function (nums) {
 
     return helper(0, 0)
 };
-```
+// console.log(canPartition([2,2, 5, 1]));
 
-### 解法2: 回溯算法+备忘录
-> 这种解法效率蛮高的，leetcode执行时间比下面那种记忆化递归还快。。。
-```javascript
+
 /**
  * 备忘录优化回溯dfs
  * @param {number[]} nums
@@ -78,7 +69,6 @@ var canPartition = function (nums) {
             return map.get(path)
         }
         let ans = false;
-        //这种递归方式，map存的key更优
         for (let i = index; i < nums.length; i++) {
             path += nums[i];
             ans = backTrack(path, i + 1);
@@ -88,11 +78,12 @@ var canPartition = function (nums) {
         }
         return ans;
     }
+    //做选择
+    //dfs
+    //回退选择
     return backTrack(0, 0)
 };
-```
-### 解法3：dfs递归+备忘录
-```javascript
+
 /**
  * 备忘录优化dfs
  * @param {number[]} nums
@@ -124,21 +115,25 @@ var canPartition = function (nums) {
     }
     return helper(0, 0)
 };
+
+/**
+ * 备忘录优化dfs
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var canPartition = function (nums) {
+    let sum = 0,
+        maxV = 0;
+    for (let v of nums) {
+        sum += v;
+        maxV = Math.max(maxV, v)
+    }
+    if (sum % 2 === 1) return false;
+    let target = sum / 2;
+    if (maxV > target) return false;
+    
+};
 // [14,9,8,4,3,2]
 // [2, 2, 5, 1]
 let test = [14, 9, 8, 4, 3, 2];
 console.log(canPartition(test));
-```
-
-### 解法4：动态规划
-基于递归思路，分析出动态规划的状态转移方程;
-动态规划四部曲：
-
-1. 找状态和选择，nums里面的数值和目标值，选择是nums数选择或不选择
-2. dp表的定义，dp[i][j] 表示从前i选择，是否存在和为j，值为false或者true
-3. 对于当前i,要么选择，要么不选择，可以得出状态转移方程:
-dp[i][j] = dp[i][j-nums[i-1]] || dp[i-1][j]
-4. 编码，定义base case,再遍历状态，利用方程求解，最总dp[size][target]即为解
-
-这里可以看出，dp只跟i-1相关所以可以优化成一维数组dp[i],填二位表可以分析出，降维的思路
-

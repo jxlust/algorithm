@@ -80,3 +80,25 @@ function getStartIndex(len) {
     let line = Math.ceil(Math.log2(len)) - 1;
     Math.pow(2, line - 1) - 1;
 }
+
+//对于堆排序，建堆继续下沉那一行代码可以不写，但是堆就不满足大堆规则，但是排序不会影响，一样是OK的，下面验证
+
+const createData = function () {
+  let arr = [];
+  for (let i = 0; i < 100; i++) {
+    let num = Math.ceil(Math.random() * 1000);
+    arr.push(num)
+  }
+  return arr;
+}
+for (let i = 0; i < 100; i++) {
+  let test = createData();
+  console.log('测试数据：', test);
+  let sort1 = heapSort(test);
+  let sort2 = test.sort((v1, v2) => v1 - v2)
+  if(sort1.join() != sort2.join()){
+    throw new Error('错误')
+  }else{
+    // throw new Error('正确')
+  }
+}

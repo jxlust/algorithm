@@ -45,7 +45,7 @@ function heapify(arr, i) { // 堆调整
 
     if (largest != i) {
         swap(arr, i, largest);
-        heapify(arr, largest);
+        heapify(arr, largest);//这一行代码可以不写，对于排序或者求topK,没必要
     }
 }
 

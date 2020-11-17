@@ -14,6 +14,16 @@ var MyLinkedList = function () {
     this.header = new LinkBean(0);
 };
 
+MyLinkedList.prototype.set = function (...arg) {
+  let prev = this.head;
+  for (let v of arg) {
+    let cur = new LinkBean(v);
+    prev.next = cur;
+    prev = cur;
+  }
+  this.size = arg.length;
+  // console.log('头节点：', this.head, this.size);
+}
 /**
  * Get the value of the index-th node in the linked list. If the index is invalid, return -1. 
  * @param {number} index

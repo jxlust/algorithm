@@ -140,10 +140,19 @@ class Skiplist {
         this.addLevel();
       }
 
+//       //找到上层的前置节点
+//       while (preNode.up === null) {
+//         preNode = preNode.left;
+//       }
+      
       //找到上层的前置节点
-      while (preNode.up === null) {
+      while (!!preNode && preNode.up === null) {
         preNode = preNode.left;
       }
+      //不知道为啥这里可能会出现空值
+      if(!preNode)return;
+ 
+      
       preNode = preNode.up; //到了上层层级节点
       //把提升层级的插入到这层
       let upNode = new LinkBean(num);

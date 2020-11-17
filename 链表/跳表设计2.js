@@ -109,8 +109,9 @@ class Skiplist {
       //删除层是最高层
       leftNode.down.up = null;
       rightNode.down.up = null;
-      // this.head = leftNode.down;
-      // this.tail = rightNode.down;
+      //这里得更像头尾节点，要不然会导致下面添加的地方出现报错
+      this.head = leftNode.down;
+      this.tail = rightNode.down;
     } else {
       //不是最高层
       leftNode.up.down = leftNode.down;
@@ -141,16 +142,15 @@ class Skiplist {
       }
 
 //       //找到上层的前置节点
-//       while (preNode.up === null) {
-//         preNode = preNode.left;
-//       }
-      
-      //找到上层的前置节点
-      while (!!preNode && preNode.up === null) {
+      while (preNode.up === null) {
         preNode = preNode.left;
       }
-      //不知道为啥这里可能会出现空值
-      if(!preNode)return;
+      //找到上层的前置节点
+//       while (!!preNode && preNode.up === null) {
+//         preNode = preNode.left;
+//       }
+//       //删除最高层如果没有更新头尾节点，可能会出现空值
+//       if(!preNode)return;
  
       
       preNode = preNode.up; //到了上层层级节点

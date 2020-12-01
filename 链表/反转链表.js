@@ -10,6 +10,7 @@ var reverseList = function (head) {
     return cur;
 };
 
+
 /**
  * 理解：
  * 1 > 2 > 3 > 4 > 5

@@ -41,5 +41,53 @@ var flatten = function (head) {
   }
   return head;
 
+};
 
+var flatten = function (head) {
+  //一次dfs处理
+  //双向链表，需要pre,next
+  if (!head) return null;
+  let newLink = new Node(-1);
+  newLink.next.prev = null;
+  const dfs = function (pre, cur) {
+    if (!cur) return pre;
+    pre.next = cur;
+    cur.prev = pre;
+
+    let nextNode = cur.next;
+    let tailNode = dfs(cur, cur.child)
+    cur.child = null;
+    return dfs(tailNode, nextNode);
+  }
+  dfs(newLink, head);
+  return newLink.next;
+}
+
+
+/**
+ * @param {Node} head
+ * @return {Node}
+ */
+var flatten = function (head) {
+  if (!head) return null;
+  let stack = [];
+  stack.push(head);
+  let prev = new Node(-1),
+    cur = null;
+  while (stack.length) {
+    //栈
+    cur = stack.pop();
+    prev.next = cur;
+    cur.prev = prev;
+    if (cur.next) {
+      stack.push(cur.next)
+    }
+    if (cur.child) {
+      stack.push(cur.child)
+    }
+    cur.child = null;
+    prev = cur;
+  }
+  head.prev = null;
+  return head;
 };

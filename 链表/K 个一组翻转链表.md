@@ -1,11 +1,12 @@
-/**
- * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
- * }
- */
+### 题目
+给你一个链表，每 k 个节点一组进行翻转，请你返回翻转后的链表。
+k 是一个正整数，它的值小于或等于链表的长度。
+如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
 
+### 方法一：栈
+
+代码：
+```javascript
 /**
  * @param {ListNode} head
  * @param {number} k
@@ -43,8 +44,43 @@ var reverseKGroup = function (head, k) {
   return link.next;
 }
 
+```
 
+### 方法二：递归
 
+代码
+```javascript
+var reverseKGroup = function (head, k) {
+    let count = 0;
+    let cur = head;
+    while (cur && count < k) {
+        count++;
+        cur = cur.next;
+    }
+    if (count === k) {
+        // count === k
+        //划分了一组了
+        let pre = reverseKGroup(cur, k);
+        // 1->2->3
+        while (count != 0) {
+            //翻转，把head的0-count节点翻转
+            count--;
+            let temp = head.next;
+            head.next = pre;
+            pre = head;
+            head = temp;
+        }
+        //返回翻转后的
+        return pre
+    }
+    //若count != k,base case 也是return head
+    return head;
+}
+
+```
+### 方法三：模拟
+代码
+```javascript
 var reverseKGroup = function (head, k) {
   // 1 -> 2 -> 3 -> 4 -> 5
   // k = 2 : 2->1->4->3->5;
@@ -92,7 +128,10 @@ var reverseKGroup = function (head, k) {
   return parent.next;
 
 };
+```
 
+### 测试
+```javascript
 const reverse = (startNode, endNode) => {
   let temp = endNode.next;
   let p = startNode;
@@ -132,3 +171,4 @@ let link = {
 
 reverse(link, link.next.next);
 console.log(link);
+```

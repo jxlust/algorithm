@@ -23,3 +23,30 @@ var postorderTraversal = function (root) {
   return result;
 
 }
+
+
+var postorderTraversal = function (root) {
+  let result = [];
+  let stack = [];
+
+  let pre = null;
+
+  while (root || stack.length) {
+    if (root) {
+      stack.push(root)
+      root = root.left;
+    } else {
+      let top = stack[stack.length - 1];
+      if(top.right === null || top.right === pre){
+        stack.pop();
+        result.push(top.val);
+        pre = top;
+      }else{
+        root = top.right;
+      }
+    }
+  }
+
+  return result;
+
+}

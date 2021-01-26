@@ -38,6 +38,29 @@ var constructFromPrePost = function (pre, post) {
     }
     return helper(0, n - 1, 0, n - 1);
 };
+
+
+/**
+ * 时间复杂度较高
+ * @param {number[]} pre
+ * @param {number[]} post
+ * @return {TreeNode}
+ */
+var constructFromPrePost = function (pre, post) {
+    const map = new Map();
+    for (let i = 0; i < post.length; i++) {
+        map.set(post[i], i)
+    }
+    let N = pre.length;
+    if (N === 0) return null;
+    let root = new TreeNode(pre[0]);
+    if (N === 1) return root;
+    let nextV = pre[1];
+    let L = map.get(nextV);
+    root.left = constructFromPrePost(pre.slice(1, 2 + L), post.slice(0, L + 1));
+    root.right = constructFromPrePost(pre.slice(2 + L, N), post.slice(L + 1, N));
+    return root;
+};
 let test = [1, 2, 4, 5, 3, 6, 7],
     test2 = [4, 5, 2, 6, 7, 3, 1]
-    console.log(constructFromPrePost(test,test2));
+console.log(constructFromPrePost(test, test2));

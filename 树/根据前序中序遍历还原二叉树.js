@@ -16,11 +16,11 @@ const buildTree = function (preorder, inorder) {
   }
   const helper = function (p_start, p_end, i_start, i_end) {
     // console.log(pre, inor);
-    console.log(p_start,p_end,i_start,i_end);
+    console.log(p_start, p_end, i_start, i_end);
     // if (p_start == p_end) {
     //   return null;
     // }
-    if(p_start > p_end){
+    if (p_start > p_end) {
       return null;
     }
 
@@ -28,11 +28,11 @@ const buildTree = function (preorder, inorder) {
     let root = new TreeNode(rV);
     let nIndex = map[rV];
     let leftNum = nIndex - i_start;
-    root.left = helper(p_start + 1, p_start  + leftNum, i_start, nIndex - 1);
+    root.left = helper(p_start + 1, p_start + leftNum, i_start, nIndex - 1);
     root.right = helper(p_start + 1 + leftNum, p_end, nIndex + 1, i_end);
     return root;
   }
-  return helper(0, n-1 , 0, n-1 )
+  return helper(0, n - 1, 0, n - 1)
 
 }
 const buildTree3 = function (preorder, inorder) {
@@ -58,6 +58,28 @@ const buildTree3 = function (preorder, inorder) {
 
 }
 
-let test1 =  [3,9,20,15,7]
-let test2 = [9,3,15,20,7]
+let test1 = [3, 9, 20, 15, 7]
+let test2 = [9, 3, 15, 20, 7]
 console.log(JSON.stringify(buildTree(test1, test2)));
+
+
+const buildTree1 = function (preorder, inorder) {
+  const map = new Map();
+  for (let i = 0; i < inorder.length; i++) {
+    map.set(inorder[i], i)
+  }
+  let N = preorder.length;
+  const helper = function (pS, pE, iS, iE) {
+    if (pS > pE || iS > iE) return null;
+
+    let val = preorder[pS];
+    let node = new TreeNode(val);
+    let diff = map.get(val) - iS;
+    let L = diff > 0 ? diff : 0;
+
+    node.left = helper(pS + 1,pS + L < pE ? pS + L : pE,iS,iS + L - 1);
+    node.right = helper(pS + L + 1,pE,iS + L + 1,iE);
+    return node;
+  }
+  return helper(0, N - 1, 0, N - 1)
+}

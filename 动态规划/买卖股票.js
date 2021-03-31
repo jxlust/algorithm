@@ -165,3 +165,47 @@ var maxProfit = function (k, prices) {
 
   return dp[n][k][0];
 };
+
+
+
+/**
+ * 不限制交易次数的动态规划分析
+ * @param {number[]} prices
+ * 
+ */
+var maxProfitInfinity = function (prices) {
+  // k无穷 k-1也是无穷，所以k无意义
+  // dp[i][0] = Math.max(dp[i-1][0],dp[i-1][1] + prices[i]);
+  // dp[i][1] = Math.max(dp[i-1][1],dp[i-1][0] - prices[i]);
+  let n = prices.length;
+  let dp_i_0 = 0,
+    dp_i_1 = Number.MIN_SAFE_INTEGER;
+  for (let i = 0; i < n; i++) {
+    let temp = dp_i_0;
+    dp_i_0 = Math.max(dp_i_0, dp_i_1 + prices[i]);
+    dp_i_1 = Math.max(dp_i_1, temp - prices[i]);
+  }
+  return dp_i_0;
+}
+console.log(maxProfitInfinity([7, 1, 5, 3, 6, 4]));
+
+
+// k = +infinity 和加入冷冻期，每次sell之后要等一天才能再买入
+// 当第i天选择buy的时候，要从i-2的状态转入了
+var maxProfitInfinityWithCool = function (prices) {
+  // dp[i][0] = Math.max(dp[i-1][0],dp[i-1][1] + prices[i]);
+  // dp[i][1] = Math.max(dp[i-1][1],dp[i-2][0] - prices[i]);
+
+  //有三个变量定义
+  let n = prices.length;
+  let dpi0 = 0,
+    dpi1 = Number.MIN_SAFE_INTEGER,
+    dpPre0 = 0;
+  for (let i = 0; i < n; i++) {
+    let temp = dpi0;
+    dpi0 = Math.max(dpi0,dpi1 + prices[i]);
+    dpi1 = Math.max(dpi1,dpPre0 - prices[i]);
+    dpPre0 = temp;
+  }
+  return dpi0;
+}

@@ -4,7 +4,6 @@
  * @param {*} target 
  */
 const search = function (nums, target) {
-
     let left = 0;
     let right = nums.length - 1;
 
@@ -43,6 +42,24 @@ const search2 = function (nums, target) {
 
 };
 
+const search3 = function (nums, target) {
+    let left = 0,
+        right = nums.length - 1;
+    while (left < right) {
+        let mid = (left + right) >>> 1;
+        if (nums[mid] >= target) {
+            right = mid;
+        } else {
+            left = mid + 1;
+        }
+    }
+    console.log(left, right);
+    return nums[left] === target ? left : -1;
+
+}
+
 
 const arr = [-1, 0, 3, 5, 9, 12];
 console.log(search(arr, 9));
+// console.log();
+search3([1, 1,2, 2,2], 2)

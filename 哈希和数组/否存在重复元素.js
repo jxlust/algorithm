@@ -41,18 +41,53 @@ var containsNearbyAlmostDuplicate = function (nums, k, t) {
   let n = nums.length
   for (let i = 0; i < n; i++) {
     let num = nums[i]
-    let bucket = getBucket(num, t + 1);
-		if(map.has(bucket)){
-			let pre = map.get(bucket)
-			if(i - pre <= k) return true;
-			map.set(bucket,i); 
-		}else{
-			map.set(bucket,i);
-		}
-		return false;
+    let bucket = getBucket(num, t + 1)
+    for (let opt of [-1, 0, 1]) {
+      //当前桶，邻居桶，统一判断就行
+      let neighbor = bucket + opt
+      if (map.has(neighbor)) {
+        let pre = map.get(neighbor)
+        if (Math.abs(nums[pre] - num) <= t && i - pre <= k) {
+          return true
+        }
+      }
+    }
+    //否
+    map.set(bucket, i)
   }
+  return false
 
+  /**
+   * 第几个桶
+   * @param {number} x 桶里元素
+   * @param {number} v 桶的容量
+   * @returns
+   */
   function getBucket(x, v) {
     return x >= 0 ? (x / v) | 0 : (((x + 1) / v) | 0) - 1
   }
 }
+
+/**
+ * 找第一个不重复的值
+ * @param {string} s
+ */
+function findFirstValue(s) {
+  let map = new Map()
+  //arr前面出现重复的移掉
+  for (let v of s) {
+    if (map.has(v)) {
+      map.set(v, map.get(v) + 1)
+    } else {
+      map.set(v, 1)
+    }
+  }
+
+  for (let [key, v] of map) {
+    if (v === 1) return key
+  }
+  return ' '
+}
+
+// console.log(findFirstValue('aaabcdbde'));
+

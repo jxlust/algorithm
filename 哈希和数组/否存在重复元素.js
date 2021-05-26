@@ -68,6 +68,39 @@ var containsNearbyAlmostDuplicate = function (nums, k, t) {
   }
 }
 
+
+
+var containsNearbyAlmostDuplicate = function (nums, k, t) {
+  let map = new Map()
+  let n = nums.length
+  for (let i = 0; i < n; i++) {
+    let num = nums[i]
+    let bucket = getBucket(num, t + 1)
+    for (let opt of [-1, 0, 1]) {
+      //当前桶，邻居桶
+      let neighbor = bucket + opt
+      if (map.has(neighbor) && Math.abs(map.get(neighbor) - num) <= t) {
+				return true
+      }
+    }
+    map.set(bucket, num)
+		if(i >= k){
+			map.delete(getBucket(nums[i - k],t+1))
+		}
+  }
+  return false
+
+  /**
+   * 第几个桶
+   * @param {number} x 桶里元素
+   * @param {number} v 桶的容量
+   * @returns
+   */
+  function getBucket(x, v) {
+    return x >= 0 ? (x / v) | 0 : (((x + 1) / v) | 0) - 1
+  }
+}
+
 /**
  * 找第一个不重复的值
  * @param {string} s

@@ -124,3 +124,33 @@ function findFirstValue(s) {
 
 // console.log(findFirstValue('aaabcdbde'));
 
+
+
+/**
+ * 在一个长度为 n 的数组 nums 里的所有数字都在 0～n-1 的范围内。
+ * 数组中某些数字是重复的，但不知道有几个数字重复了，也不知道每个数字重复了几次。请找出数组中任意一个重复的数字。
+ * @param {number[]} nums
+ * @return {number}
+ */
+ var findRepeatNumber = function(nums) {
+  //索引表
+  let i = 0;
+  let n = nums.length;
+  //nums[i]跟它的原始索引位置交换nums[nums[i]]
+  while(i < n){
+      if(nums[i] === i){
+          //索引位置对应了
+          i++;
+          continue;
+      }
+      if(nums[i] === nums[nums[i]]){
+          //出现重复数
+          return nums[i];
+      }
+      //交换
+      let temp = nums[i];
+      nums[i] = nums[temp];
+      nums[temp] = temp;
+  }
+  return -1;
+};

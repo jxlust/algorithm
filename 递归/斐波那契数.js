@@ -27,7 +27,7 @@ var fib = function (n) {
     let p1 = 0;
     let p2 = 1;
     let cur = 1;
-    for (let i = 1; i <= n; i++) {
+    for (let i = 2; i <= n; i++) {
         cur = (p1 + p2) % 1000000007;
         p1 = p2;
         p2 = cur;

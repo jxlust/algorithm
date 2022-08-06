@@ -32,7 +32,7 @@ const DFS2 = function (data,target) {
     stack.push(data);
     while(stack.length){
         //不为空
-        let cur = stack[0];//
+        let cur = stack[stack.length - 1];
         if(cur.val === target){
             return true;
         }

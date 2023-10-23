@@ -1,17 +1,17 @@
 /**
  * 不重复数字的全排列
- * @param {Number[]} nums 
+ * @param {Number[]} nums
  */
 const permute = function (nums) {
   /**
-   * 
+   *
    * @param {Number[]} nums 选择列表
    * @param {Number[]} track 路径
    */
   const backtrack = function (nums, track) {
     if (nums.length === track.length) {
       //结束条件，到底了
-      res.push([...track])
+      res.push([...track]);
       return;
     }
 
@@ -27,8 +27,7 @@ const permute = function (nums) {
       //路径移除改选择，这里移除掉v
       track.pop();
     }
-
-  }
+  };
 
   let res = [];
   let track = [];
@@ -36,6 +35,29 @@ const permute = function (nums) {
   backtrack(nums, track);
 
   return res;
-}
+};
 let test = [1, 2, 3];
-console.log(permute(test));
+// console.log(permute(test));
+
+function getAll(list) {
+  const ret = [];
+  const dfs = (n, nums) => {
+    if (n === list.length) {
+      ret.push([...nums]);
+    }
+    for (let v of list) {
+      if (nums.includes(v)) {
+        continue;
+      }
+      nums.push(v);
+      dfs(n + 1, nums);
+      nums.pop();
+    }
+  };
+
+  dfs(0, []);
+
+  console.log("r:", ret);
+}
+
+getAll(test);

@@ -1,8 +1,23 @@
 /**
  *
- * 日历拼图算法，定义一些blocks，有重量属性和形状属性，形状利用二维矩阵0和1表示；重量是整数；地图也是一个二维矩阵0和1表示；形状块可以旋转，翻转。用java实现，输出所有最优解，满足填入的形状块重量之和最大。
- * @param {*} postData
+ * 日历拼图算法，定义一些blocks，有重量属性和形状属性，
+ * 形状利用二维矩阵0和1表示；重量是整数；地图也是一个二维矩阵0和1表示；形状块可以旋转，翻转。
+ * 输出所有最优解，满足填入的形状块重量之和最大。
+ *
  */
+
+// 算法思路
+// 回溯函数主要思路
+// 1. if(path.length === 区块长度) 一条路径已完成选择
+// 1.1  把结果添加到结果集
+// 2. 遍历所有选择块
+// 2.1 把选择尝试放进容器里面
+// if(!cantFill(block)) continue 跳过
+// path.push('block index');
+// 2.2 回溯dfs
+// dfs(map,deep+1)
+// 2.3 撤销选择
+// map 移除掉block
 
 function deepClone(obj) {
   if (obj === null || obj === undefined || obj === "") {
@@ -144,141 +159,117 @@ const getFillPostion = (shape, row, col, cols) => {
   return fillCell.join("_");
 };
 
-
 function CalcPuzzle(postData) {
-  // 结果集合
-  // 回溯函数主要思路
-  // 1. if(path.length === 区块长度) 一条路径已完成选择
-  // 1.1  把结果添加到结果集
-  // 2. 遍历所有选择块
-  // 2.1 把选择尝试放进容器里面
-  // if(!cantFill(block)) continue 跳过
-  // path.push('block index');
-  // 2.2 回溯dfs
-  // dfs(map,deep+1)
-  // 2.3 撤销选择
-  // map 移除掉block
+  // 初始化一些数据
   const { row, column, blocks } = postData.container;
   const objects = postData.objects;
   const objLength = objects.length;
   const result = [];
-  const usedMap = {};
+  const usedMapSet = new Set();
+
   let maxWeight = -1;
   const container = new Array(row);
   for (let i = 0; i < row; ++i) {
     container[i] = new Array(column).fill("");
   }
-  // 障碍填充
+  // 地图初始化障碍物，填充Z
   for (let [r, c] of blocks) {
     container[r][c] = "Z";
   }
-  const mapSize = row * column;
-
-  const dfs = (map, curMax, pathKey) => {
+  //   const mapSize = row * column;
+  const dfs = (map, curMax, pathKey, parent) => {
     if (pathKey.size === objLength) {
       // 所有地图上的格子遍历完了，可以得出一个结果
       if (curMax > maxWeight) {
         // 出现了最优的情况，清空一下数据
         result.length = 0;
+        // usedMapSet.clear();
         maxWeight = curMax;
         // 深拷贝一下
-        result.push(deepClone(map));
+        const mapKeys = map.join("#");
+        if (!usedMapSet.has(mapKeys)) {
+          // 去重
+          result.push(deepClone(map));
+          usedMapSet.add(mapKeys);
+        }
       } else if (curMax != 0 && curMax === maxWeight) {
-        result.push(deepClone(map));
+        const mapKeys = map.join("#");
+        if (!usedMapSet.has(mapKeys)) {
+          // 去重
+          result.push(deepClone(map));
+          usedMapSet.add(mapKeys);
+        }
       }
       return;
     }
 
     for (let obj of objects) {
+      const objIndex = obj.index;
+      if (parent.has(objIndex)) {
+        continue;
+      }
+      parent.add(objIndex);
       // 做选择
-
       let allTransformsShape = getAllTransform(obj.shape);
-      let isCanFill = false;
 
       for (let sn in allTransformsShape) {
+        // 表示物体块obj(index)的第sn种形态
+        const objKey = objIndex + "_" + sn;
+        if (pathKey.has(objKey)) {
+          continue;
+        }
+        pathKey.add(objKey);
         let shape = allTransformsShape[sn];
+        let isCanFill = false;
 
+        // 遍历地图格子，尝试去放置该物体块
         for (let r = 0; r < row; r++) {
           for (let c = 0; c < column; c++) {
             // 位置，需要计算填入的一个唯一标识
             // 只计入shape为实体的填入位置排列
-
-            const mk = obj.index + "_" + sn + "_" + (r * column + c);
-            if (usedMap[mk]) {
-              continue;
-            }
-            usedMap[mk] = true;
+            // const mk = obj.index + "_" + sn + "_" + (r * column + c);
             if (isCanPlace(map, shape, r, c)) {
               isCanFill = true;
               // 可以放入
               // 容器填充shape
               fillTheShape(map, shape, r, c, obj.index);
-              // 记录一下选择的shape index
-              pathKey.add(obj.index);
               // shape填入容器完毕，dfs下一次
               // 计算下一个位置
-              dfs(map, curMax + obj.weight, pathKey);
+              dfs(map, curMax + obj.weight, pathKey, parent);
               // 从地图上移除
               removeShape(map, shape, r, c);
-              pathKey.delete(obj.index);
             }
           }
         }
+        if (!isCanFill) {
+          // 这个块没有填入
+          dfs(map, curMax, pathKey, parent);
+        }
+        // 回退
+        pathKey.delete(objKey);
       }
-
-      if (!isCanFill) {
-        // 这块没有找到合适的填充地方
-        pathKey.add(obj.index);
-      }
+      // 回退
+      parent.delete(objIndex);
     }
   };
 
   const pathKey = new Set();
   const parent = new Set();
-  //   const visited = new Set();
-  dfs(container, 0, pathKey);
-  console.log("result:", result);
-  console.log("use map:", usedMap);
+  dfs(container, 0, pathKey, parent);
+  //   console.log("result:", result);
+  console.log("最优解的个数:", result.length);
 }
 
 const postData = {
   container: {
-    row: 7,
-    column: 7,
-    blocks: [],
-  },
-  objects: [
-    {
-      weight: 1,
-      index: "A",
-      shape: [
-        [0, 0, 1],
-        [0, 0, 1],
-        [0, 0, 1],
-      ],
-    },
-    {
-      weight: 2,
-      index: "B",
-      shape: [
-        [1, 0, 1],
-        [1, 0, 1],
-        [1, 1, 1],
-      ],
-    },
-  ],
-};
-
-const postData2 = {
-  container: {
-    row: 2,
-    column: 2,
+    row: 20,
+    column: 20,
     blocks: [[1, 1]],
   },
   objects: [
     {
       index: "A",
-      weight: 1,
+      weight: 10,
       shape: [
         [1, 0],
         [1, 0],
@@ -287,7 +278,7 @@ const postData2 = {
     {
       index: "B",
       weight: 1,
-      shape: [[1, 0]],
+      shape: [[1, 1, 1, 1]],
     },
     // {
     //   index: "C",
@@ -300,4 +291,4 @@ const postData2 = {
   ],
 };
 
-CalcPuzzle(postData2);
+CalcPuzzle(postData);

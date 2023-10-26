@@ -7,9 +7,16 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "jsdebug",
+      "name": "permute",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/回溯算法/Puzzle.js"
+      "program": "${workspaceFolder}/回溯算法/permuteBlocks.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "puzzle",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/回溯算法/puzzleGame.js"
     }
   ]
 }

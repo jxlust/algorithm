@@ -6,19 +6,6 @@
  *
  */
 
-// 算法思路
-// 回溯函数主要思路
-// 1. if(path.length === 区块长度) 一条路径已完成选择
-// 1.1  把结果添加到结果集
-// 2. 遍历所有选择块
-// 2.1 把选择尝试放进容器里面
-// if(!cantFill(block)) continue 跳过
-// path.push('block index');
-// 2.2 回溯dfs
-// dfs(map,deep+1)
-// 2.3 撤销选择
-// map 移除掉block
-
 function deepClone(obj) {
   if (obj === null || obj === undefined || obj === "") {
     return obj;
@@ -158,7 +145,10 @@ const getFillPostion = (shape, row, col, cols) => {
   //   fillCell.sort((v1, v2) => v1 - v2);
   return fillCell.join("_");
 };
-
+/**
+ * 利用手动stack来处理
+ * @param {*} postData
+ */
 function CalcPuzzle(postData) {
   // 初始化一些数据
   const { row, column, blocks } = postData.container;
@@ -167,8 +157,10 @@ function CalcPuzzle(postData) {
   for (let obj of objects) {
     obj.allShape = getAllTransform(obj.shape);
   }
-  const objLength = objects.length;
+  const nums = objects.length;
+  // 结果集合
   const result = [];
+  // 记录满足条件的地图集合唯一key, 防止出现重复的地图拼法
   const usedMapSet = new Set();
 
   let maxWeight = -1;
@@ -180,85 +172,10 @@ function CalcPuzzle(postData) {
   for (let [r, c] of blocks) {
     container[r][c] = "Z";
   }
-  //   const mapSize = row * column;
-  const dfs = (map, curMax, pathKey, parent) => {
-    if (pathKey.size === objLength) {
-      // 所有地图上的格子遍历完了，可以得出一个结果
-      if (curMax > maxWeight) {
-        // 出现了最优的情况，清空一下数据
-        result.length = 0;
-        // usedMapSet.clear();
-        maxWeight = curMax;
-        // 深拷贝一下
-        const mapKeys = map.join("#");
-        if (!usedMapSet.has(mapKeys)) {
-          // 去重
-          result.push(deepClone(map));
-          usedMapSet.add(mapKeys);
-        }
-      } else if (curMax != 0 && curMax === maxWeight) {
-        const mapKeys = map.join("#");
-        if (!usedMapSet.has(mapKeys)) {
-          // 去重
-          result.push(deepClone(map));
-          usedMapSet.add(mapKeys);
-        }
-      }
-      return;
-    }
-    for (let obj of objects) {
-      const objIndex = obj.index;
-      if (parent.has(objIndex)) {
-        continue;
-      }
-      parent.add(objIndex);
-      // 做选择
-      const allShape = obj.allShape;
-      for (let sn in allShape) {
-        // 表示物体块obj(index)的第sn种形态
-        const objKey = objIndex + "_" + sn;
-        if (pathKey.has(objKey)) {
-          continue;
-        }
-        pathKey.add(objKey);
-        let shape = allShape[sn];
-        let isCanFill = false;
 
-        // 遍历地图格子，尝试去放置该物体块
-        for (let r = 0; r < row; r++) {
-          for (let c = 0; c < column; c++) {
-            // 位置，需要计算填入的一个唯一标识
-            // 只计入shape为实体的填入位置排列
-            // const mk = obj.index + "_" + sn + "_" + (r * column + c);
-            if (isCanPlace(map, shape, r, c)) {
-              isCanFill = true;
-              // 可以放入
-              // 容器填充shape
-              fillTheShape(map, shape, r, c, obj.index);
-              // shape填入容器完毕，dfs下一次
-              // 计算下一个位置
-              dfs(map, curMax + obj.weight, pathKey, parent);
-              // 从地图上移除
-              removeShape(map, shape, r, c);
-            }
-          }
-        }
-        if (!isCanFill) {
-          // 这个块没有填入
-          dfs(map, curMax, pathKey, parent);
-        }
-        // 回退
-        pathKey.delete(objKey);
-      }
-      // 回退
-      parent.delete(objIndex);
-    }
-  };
+  const stack = [];
+  // const
 
-  const pathKey = new Set();
-  const parent = new Set();
-  dfs(container, 0, pathKey, parent);
-  //   console.log("result:", result);
   console.log("最优解的个数:", result.length, ",max weight:", maxWeight);
 }
 

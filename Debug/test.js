@@ -1,4 +1,5 @@
 function swap(arr, i, j) {
+  if (i === j) return;
   let tmp = arr[i];
   arr[i] = arr[j];
   arr[j] = tmp;
@@ -20,24 +21,37 @@ function getAllStack(list) {
   while (stack.length) {
     // 栈不为空
     let cur = stack.pop();
-    if (cur.index + 1 === nums) {
+    const { index, first } = cur;
+    if (index + 1 === nums) {
       // 排列一次结果
-      result.push(cur.first.join());
+      result.push(first.join());
     } else {
-      for (let i = cur.index; i < nums; i++) {
-        swap(cur.first, i, cur.index);
+      for (let i = index; i < nums; i++) {
+        // 交换
+        // swap(first, i, index);
+        // stack.push({
+        //   // 注意这里是拷贝出来
+        //   first: [...first],
+        //   index: index + 1,
+        // });
+        // 撤回 上面都是对象的拷贝，这里不用撤回也可以，因为first已经不用了,但是对原数组会产生改变
+        // swap(first, i, index);
+
+        const newList = [...first];
+        swap(newList, i, index);
         stack.push({
-          // 注意这里是拷贝出来
-          first: [...cur.first],
-          index: cur.index + 1,
+          first: newList,
+          index: index + 1,
         });
-        swap(cur.first, i, cur.index);
       }
     }
   }
 
   console.log("stack :", result);
+  console.log("list:", list);
   return result;
 }
+
+const test = [1, 2, 3];
 
 getAllStack(test);

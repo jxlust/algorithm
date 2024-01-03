@@ -15,6 +15,7 @@ function permuteBlocks(blocks) {
       }
       parent.push(item.key);
       for (let sp of item.shape) {
+        // 对于内部可能出现重复的去重
         if (path.includes(item.key + sp)) {
           continue;
         }
@@ -30,7 +31,7 @@ function permuteBlocks(blocks) {
   };
 
   dfs(0, [], []);
-  console.log(result);
+  console.log(result.length, result);
 }
 
 const map = ["M1", "M2", "M3"];
@@ -45,7 +46,7 @@ const blocks = [
   },
   {
     key: "C",
-    shape: ["1"],
+    shape: ["1", "2"],
   },
 ];
 
@@ -105,62 +106,4 @@ function permuteAllInMap(z, blocks) {
   console.log("length:", result.length, "map:", result);
 }
 
-permuteAllInMap(2, blocks);
-
-function permuteBlocksStack(blocks) {
-  let stack = [];
-  let length = blocks.length;
-  let result = [];
-
-  for (let b of blocks) {
-    for (let s of b.shape) {
-      stack.push(b.key + "_" + s);
-    }
-  }
-  
-}
-
-permuteBlocksStack(blocks);
-
-/**
- * 增加难度 利用手动stack处理
- * 物体块n，有m中状态，可以填入到z个区域，请输出可以填入情况的全排列
- */
-function permuteAllInMapByStack(z, blocks) {
-  const result = [];
-  const mapKey = new Set();
-  // container
-  const container = new Array(z).fill("");
-  const stack = [];
-  for (let block of blocks) {
-    stack.push(block);
-  }
-  // 最多放置到地图容器里块个数
-  const maxCount = Math.min(z, blocks.length);
-  const path = [];
-  while (stack.length) {
-    // 栈不为空
-    if (path.length === maxCount) {
-      // 能填的都填完了
-      // 防止重复
-      let keys = container.join("#");
-      if (!mapKey.has(keys)) {
-        mapKey.add(keys);
-        result.push([...container]);
-      }
-      // clear
-      path.length = 0;
-    }
-    const cur = stack.pop();
-    const shape = cur.shape;
-
-    for (let s of shape) {
-      let shapeKey = cur.key + s;
-      path.push(shapeKey);
-    }
-  }
-
-  console.log("length:", result.length, "map:", result);
-}
-
-// permuteAllInMapByStack(3, blocks);
+permuteAllInMap(4, blocks);

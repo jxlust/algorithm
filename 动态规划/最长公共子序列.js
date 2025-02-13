@@ -34,7 +34,7 @@ const longestCommonSubsequence = function (text1, text2) {
   return dp[n][m]
 };
 
-console.log(longestCommonSubsequence('abcde', 'bdfge'));
+// console.log(longestCommonSubsequence('abcde', 'bdfge'));
 
 
 /**

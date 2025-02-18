@@ -1,24 +1,3 @@
-class Graph {
-    constructor() {
-        this.nodes = new Map(); // 节点存储各个节点的信息，例如邻接点和权重
-    }
-
-    addEdge(from, to, weight) {
-        if (!this.nodes.has(from)) {
-            this.nodes.set(from, []);
-        }
-        if (to) {
-            this.nodes.get(from).push({ to: to, weight: weight });
-        }
-
-        // 同样可以增加逆向边（如果需要）
-    }
-
-    getData() {
-        return this.nodes;
-        // return JSON.stringify(this.nodes);
-    }
-}
 
 
 class MinHeapCompare {
@@ -26,6 +5,7 @@ class MinHeapCompare {
         this.heap = [];
         this.compare = (typeof compare === 'function') ? compare : this.defaultCompare
     }
+
     defaultCompare(a, b) {
         return a < b;
     }
@@ -104,45 +84,103 @@ class MinHeapCompare {
     }
 }
 
+/**
+ * 
+ * @param {*} graph 邻接矩阵
+ * @param {*} start 
+ */
 function dijkstraV1(graph, start) {
 
-    const distance = {}
+    const distance = new Array(graph.length).fill(Infinity);
+    const visited = new Set();
     const priorityQueue = new MinHeapCompare((a, b) => a[1] < b[1]);
-
-    for (let [key,] of graph) {
-        distance[key] = Infinity;
-    }
+    console.log(priorityQueue)
+    // 起点距离为0
     distance[start] = 0;
-    console.log(distance)
-    // [节点，距离]
-    priorityQueue.insert([start, 0])
+    priorityQueue.insert([start, 0]);
+    // visited.add(start);
+
+    // 记录最短路径的上一次节点，方便后续计算路径
+    const prevPath = new Map();
+    prevPath.set(start, null);
+
     while (!priorityQueue.isEmpty()) {
-        // 弹出队列中距离最小的节点
-        const [node, dist] = priorityQueue.pop();
-        // if(dist > distance[node]) continue;
-        console.log(2, graph.get(node));
-        for (let { to, weight } of graph.get(node)) {
-            if (distance[to] > distance[node] + weight) {
-                priorityQueue.insert([to, distance[node] + weight])
-                distance[to] = distance[node] + weight;
+        // 最小值
+        const [node, weight] = priorityQueue.pop();
+        if (visited.has(node)) continue;
+        visited.add(node);
+
+        const neighbors = graph[node];
+        for (let i = 0, len = neighbors.length; i < len; i++) {
+            let cur = neighbors[i];
+            if (cur === Infinity) continue;
+
+            if (distance[i] > distance[node] + cur) {
+                // 更新距离
+                distance[i] = distance[node] + cur;
+                priorityQueue.insert([i, distance[i]])
+                // node -> i 是最短
+                prevPath.set(i, node)
             }
+
         }
     }
-    return distance;
-}
-
-function test2() {
-    const graph = new Graph();
-    graph.addEdge('A', 'B', 3);
-    graph.addEdge('A', 'C', 1);
-    graph.addEdge('B', 'C', 2);
-    graph.addEdge('B', 'D', 4);
-    graph.addEdge('C',);
-    graph.addEdge('D',);
-    const nodes = graph.getData();
-    console.log('nodes: ', nodes)
-    const result = dijkstraV1(nodes, 'A')
-    console.log(result)
+    console.log('d:', distance)
+    console.log('prevPath:', prevPath)
+    return {
+        distance,
+        prevPath,
+    }
 
 }
-test2();
+/**
+ * 根据prevMap计算路径
+ * @param {*} prevMap 
+ * @param {*} start 
+ * @param {*} end 
+ */
+function buildPath(prevMap, start, end) {
+    let path = [];
+    let cur = end;
+    while (cur !== null && cur !== undefined) {
+        if (cur === start) {
+            path.push(cur);
+            break;
+        }
+        path.push(cur);
+        cur = prevMap.get(cur)
+    }
+    path.reverse()
+    //   判断一下第一个是否是开始位置点，如果不是，则没找到路径，返回空数组
+    return path[0] !== start ? [] : path;
+}
+
+// const MAX = Number.MAX_SAFE_INTEGER;
+function test1() {
+    // 或者使用邻接矩阵
+    // n
+    const n = 8;
+    const graph = []
+    for (let i = 0; i < n; i++) {
+        const item = new Array(n).fill(Infinity);
+        item[i] = 0;
+        graph.push(item);
+    }
+    console.log(graph);
+    graph[0][1] = 2;
+    graph[0][2] = 4;
+    graph[1][2] = 3;
+    graph[1][3] = 5;
+    graph[2][4] = 1;
+    graph[3][4] = 2;
+    graph[3][7] = 6;
+    graph[4][7] = 3;
+    graph[3][5] = 1;
+
+    const { distance, prevPath } = dijkstraV1(graph, 0)
+    const path = buildPath(prevPath, 1, 6)
+    console.log('path:', path)
+
+}
+
+test1();

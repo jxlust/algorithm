@@ -69,8 +69,35 @@ function kmpSearchV2(text, pattern) {
     return result;
 }
 
+
+function kmpSearchV3(text, pattern) {
+    const n = text.length;
+    const m = pattern.length;
+    if (m === 0) return [];
+    const next = buildNext(pattern);
+    console.log('n:', next)
+    const result = [];
+    let i = 0, j = 0;
+    while (i < n) {
+        if (j === -1 || text[i] === pattern[j]) {
+            i++;
+            j++;
+        } else {
+            j = next[j];
+        }
+        if (j === m) {
+            result.push(i - m);
+            j = next[j];
+            // console.log('i', i)
+
+        }
+    }
+    return result;
+}
+
 // 示例使用
-const text = "ababababcababc";
-const pattern = "aba";
+const text = "aaaababababcababc";
+const pattern = "aa";
 console.log(kmpSearch(text, pattern)); // 输出匹配位置
 console.log(kmpSearchV2(text, pattern)); // 输出匹配位置
+console.log(kmpSearchV3(text, pattern)); // 输出匹配位置

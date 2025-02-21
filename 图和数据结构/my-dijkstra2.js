@@ -144,12 +144,14 @@ function buildPath(prevMap, start, end) {
     let cur = end;
     while (cur !== null && cur !== undefined) {
         if (cur === start) {
+            // 如果到达了起点，则结束
             path.push(cur);
             break;
         }
         path.push(cur);
         cur = prevMap.get(cur)
     }
+    // 因为是从后往前推，所以需要把路径翻转一下
     path.reverse()
     //   判断一下第一个是否是开始位置点，如果不是，则没找到路径，返回空数组
     return path[0] !== start ? [] : path;
